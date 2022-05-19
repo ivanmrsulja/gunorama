@@ -18,16 +18,7 @@ public class GunoramaApplication {
 	private static Logger log = LoggerFactory.getLogger(GunoramaApplication.class);
 
 	public static void main(String[] args) {
-		ApplicationContext ctx = SpringApplication.run(GunoramaApplication.class, args);
-
-		String[] beanNames = ctx.getBeanDefinitionNames();
-		Arrays.sort(beanNames);
-
-		StringBuilder sb = new StringBuilder("Application beans:\n");
-		for (String beanName : beanNames) {
-			sb.append(beanName + "\n");
-		}
-		log.info(sb.toString());
+		SpringApplication.run(GunoramaApplication.class, args);
 	}
 
 	@Bean
