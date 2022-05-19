@@ -1,7 +1,5 @@
 package rs.sbnz.gunorama.model.facts;
 
-import rs.sbnz.gunorama.model.Zahtjev;
-
 public class GradjaninZdravstvenoSposobanFact {
 
     private Integer zahtjevId;

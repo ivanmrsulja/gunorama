@@ -2,44 +2,30 @@ package rs.sbnz.gunorama.controller;
 
 
 import org.kie.api.runtime.KieContainer;
-import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import rs.sbnz.gunorama.model.Zahtjev;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import rs.sbnz.gunorama.model.facts.GradjaninZdravstvenoSposobanFact;
 import rs.sbnz.gunorama.model.faze.ZdravstvenoSposobanFaza;
+import rs.sbnz.gunorama.service.ZdravstvenoSposobanService;
 
 @RestController
 @RequestMapping(value = "/api/zdravstveno-sposoban")
 public class ZdravstvenoSposobanController {
 
     private final KieContainer kieContainer;
-
+    private final ZdravstvenoSposobanService zdravstvenoSposobanService;
 
     @Autowired
-    public ZdravstvenoSposobanController(KieContainer kieContainer) {
+    public ZdravstvenoSposobanController(KieContainer kieContainer, ZdravstvenoSposobanService zdravstvenoSposobanService) {
         this.kieContainer = kieContainer;
+        this.zdravstvenoSposobanService = zdravstvenoSposobanService;
     }
 
-
-    @GetMapping
-    public ZdravstvenoSposobanFaza doSomeStuff() {
-        Zahtjev zahtjev = new Zahtjev();
-        zahtjev.setId(1);
-
-        ZdravstvenoSposobanFaza zdravstvenoSposobanFaza = new ZdravstvenoSposobanFaza();
-        zdravstvenoSposobanFaza.setDioptrija(-0.5);
-        zdravstvenoSposobanFaza.setFizickiSposoban(false);
-        zdravstvenoSposobanFaza.setZahtjevId(1);
-        zdravstvenoSposobanFaza.setProsaoPsihijatrijskuEvaluaciju(true);
-        zdravstvenoSposobanFaza.setProsaoPsiholoskuEvaluaciju(true);
-
-
-        KieSession kieSession = kieContainer.newKieSession();
-        kieSession.insert(zahtjev);
-        kieSession.insert(zdravstvenoSposobanFaza);
-        kieSession.fireAllRules();
-        kieSession.dispose();
-        return zdravstvenoSposobanFaza;
+    @PostMapping
+    public GradjaninZdravstvenoSposobanFact evaluateQuestionnaire(@RequestBody ZdravstvenoSposobanFaza questionnaire) {
+        return zdravstvenoSposobanService.evaluateQuestionnaire(questionnaire);
     }
 }

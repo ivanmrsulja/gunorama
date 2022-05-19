@@ -10,16 +10,16 @@ public class ZdravstvenoSposobanFaza {
 
     private boolean prosaoPsihijatrijskuEvaluaciju;
 
-    private boolean fizickiSposoban;
+    private boolean obradjen;
 
     public ZdravstvenoSposobanFaza() {}
 
-    public ZdravstvenoSposobanFaza(Double dioptrija, Integer zahtjevId, boolean prosaoPsiholoskuEvaluaciju, boolean prosaoPsihijatrijskuEvaluaciju, boolean fizickiSposoban) {
+    public ZdravstvenoSposobanFaza(Double dioptrija, Integer zahtjevId, boolean prosaoPsiholoskuEvaluaciju, boolean prosaoPsihijatrijskuEvaluaciju, boolean obradjen) {
         this.dioptrija = dioptrija;
         this.zahtjevId = zahtjevId;
         this.prosaoPsiholoskuEvaluaciju = prosaoPsiholoskuEvaluaciju;
         this.prosaoPsihijatrijskuEvaluaciju = prosaoPsihijatrijskuEvaluaciju;
-        this.fizickiSposoban = fizickiSposoban;
+        this.obradjen = obradjen;
     }
 
     public Double getDioptrija() {
@@ -54,11 +54,11 @@ public class ZdravstvenoSposobanFaza {
         this.prosaoPsihijatrijskuEvaluaciju = prosaoPsihijatrijskuEvaluaciju;
     }
 
-    public boolean isFizickiSposoban() {
-        return fizickiSposoban;
+    public boolean isObradjen() {
+        return obradjen;
     }
 
-    public void setFizickiSposoban(boolean fizickiSposoban) {
-        this.fizickiSposoban = fizickiSposoban;
+    public void setObradjen(boolean fizickiSposoban) {
+        this.obradjen = fizickiSposoban;
     }
 }

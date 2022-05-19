@@ -1,8 +1,6 @@
 package rs.sbnz.gunorama.model;
 
 
-import java.time.LocalDateTime;
-
 public class Korisnik extends BaseEntity {
 
     private String email;
