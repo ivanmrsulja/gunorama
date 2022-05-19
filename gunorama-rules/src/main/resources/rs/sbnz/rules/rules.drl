@@ -1,24 +1,39 @@
 package rs.sbnz.rules;
 
-import  rs.sbnz.gunorama.model.Item;
+import rs.sbnz.gunorama.model.Item;
+import rs.sbnz.gunorama.model.facts.GradjaninZdravstvenoSposobanFact;
+import rs.sbnz.gunorama.model.Zahtjev;
+import rs.sbnz.gunorama.model.faze.ZdravstvenoSposobanFaza;
 
 
 rule "Classify Item - Low Range"
     when
-        $i: Item( cost <= 300, category == Item.Category.NA )
+        $i: Item( cost <= 350, category == Item.Category.NA )
     then
-    	System.out.println("USAO U PRAVILO ITEM U NASEM PROJEKTU");
+    	System.out.println("USAO U PRAVILO LOW ITEM");
         $i.setCategory(Item.Category.LOW_RANGE);
         update($i);
 end
 
 rule "Classify Item - High Range"
     when
-        $i: Item( cost > 300, category == Item.Category.NA )
+        $i: Item( cost > 350, category == Item.Category.NA )
     then
-    	System.out.println("USAO U PRAVILO HIGH ITEM U NASEM PROJEKTU");
+    	System.out.println("USAO U PRAVILO HIGH ITEM");
         $i.setCategory(Item.Category.HIGH_RANGE);
         update($i);
+end
+
+
+rule "Gradjanin Zdravstveno Sposoban"
+    when
+        $z: Zahtjev($id:id) and
+        $zsf: ZdravstvenoSposobanFaza(zahtjevId == $id, dioptrija >= -1.0, dioptrija <= 1.0, prosaoPsiholoskuEvaluaciju == true, prosaoPsihijatrijskuEvaluaciju == true, fizickiSposoban == false)
+    then
+    	System.out.println("USAO U PRAVILO GRADJANIN ZDRAVSTVENO SPOSOBAN");
+    	$zsf.setFizickiSposoban(true);
+    	//insert(new GradjaninZdravstvenoSposobanFact($id, true));
+        update($zsf);
 end
 
 

@@ -1,4 +1,4 @@
-package rs.sbnz.gunorama;
+package rs.sbnz.gunorama.service;
 
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
