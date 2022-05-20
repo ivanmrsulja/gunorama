@@ -5,6 +5,7 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.sbnz.gunorama.model.Korisnik;
 import rs.sbnz.gunorama.model.Zahtjev;
 import rs.sbnz.gunorama.model.facts.GradjaninZdravstvenoSposobanFact;
 import rs.sbnz.gunorama.model.faze.ZdravstvenoSposobanFaza;
@@ -26,10 +27,14 @@ public class ZdravstvenoSposobanService {
         Zahtjev zahtjev = new Zahtjev();
         zahtjev.setId(1);
 
+        Korisnik k = new Korisnik(1, "email", "passw");
+        zahtjev.setKorisnik(k);
+
         questionnaire.setZahtjevId(zahtjev.getId());
         KieSession kieSession = kieContainer.newKieSession();
         kieSession.insert(zahtjev);
         kieSession.insert(questionnaire);
+        kieSession.getAgenda().getAgendaGroup("Zdravstvena evaluacija").setFocus();
         kieSession.fireAllRules();
         Collection<GradjaninZdravstvenoSposobanFact> myFacts = (Collection<GradjaninZdravstvenoSposobanFact>) kieSession.getObjects( new ClassObjectFilter(GradjaninZdravstvenoSposobanFact.class) );
         kieSession.dispose();

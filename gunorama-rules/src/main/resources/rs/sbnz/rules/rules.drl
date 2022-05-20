@@ -6,28 +6,28 @@ import rs.sbnz.gunorama.model.faze.ZdravstvenoSposobanFaza;
 
 
 rule "Gradjanin Zdravstveno Sposoban - prosao evaluaciju"
+	agenda-group "Zdravstvena evaluacija"
+    no-loop true
     when
         $z: Zahtjev($id: id) and
-        $zsf: ZdravstvenoSposobanFaza(zahtjevId == $id, dioptrija >= -1.0, dioptrija <= 1.0, prosaoPsiholoskuEvaluaciju == true, prosaoPsihijatrijskuEvaluaciju == true, obradjen == false)
+        $zsf: ZdravstvenoSposobanFaza(zahtjevId == $id, dioptrija >= -1.0, dioptrija <= 1.0, prosaoPsiholoskuEvaluaciju == true, prosaoPsihijatrijskuEvaluaciju == true)
     then
-    	System.out.println("GRADJANIN PROLAZI EVALUACIJU");
-    	$zsf.setObradjen(true);
+    	System.out.println("GRADJANIN PROLAZI EVALUACIJU ");
     	insert(new GradjaninZdravstvenoSposobanFact($id, true));
-        update($zsf);
 end
 
 
 rule "Gradjanin Zdravstveno Sposoban - pao evaluaciju"
+	agenda-group "Zdravstvena evaluacija"
+	no-loop true
     when
         $z: Zahtjev($id: id) and (
-        $zsf: ZdravstvenoSposobanFaza(zahtjevId == $id, dioptrija < -1.0, obradjen == false) or
-        $zsf: ZdravstvenoSposobanFaza(zahtjevId == $id, dioptrija > 1.0, obradjen == false) or
-        $zsf: ZdravstvenoSposobanFaza(zahtjevId == $id, prosaoPsiholoskuEvaluaciju == false, obradjen == false) or
-        $zsf: ZdravstvenoSposobanFaza(zahtjevId == $id, prosaoPsihijatrijskuEvaluaciju == false, obradjen == false)
+        $zsf: ZdravstvenoSposobanFaza(zahtjevId == $id, dioptrija < -1.0) or
+        $zsf: ZdravstvenoSposobanFaza(zahtjevId == $id, dioptrija > 1.0) or
+        $zsf: ZdravstvenoSposobanFaza(zahtjevId == $id, prosaoPsiholoskuEvaluaciju == false) or
+        $zsf: ZdravstvenoSposobanFaza(zahtjevId == $id, prosaoPsihijatrijskuEvaluaciju == false)
         )
     then
     	System.out.println("GRADJANIN PADA EVALUACIJU");
-    	$zsf.setObradjen(true);
     	insert(new GradjaninZdravstvenoSposobanFact($id, false));
-        update($zsf);
 end
