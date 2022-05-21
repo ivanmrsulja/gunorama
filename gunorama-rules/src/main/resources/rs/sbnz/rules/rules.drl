@@ -29,5 +29,8 @@ rule "Gradjanin Zdravstveno Sposoban - pao evaluaciju"
         )
     then
     	System.out.println("GRADJANIN PADA EVALUACIJU");
+        modify($z) {
+            setRazlogOdbijanja("Gradjanin nije zdravstveno sposoban.");
+        }
     	insert(new GradjaninZdravstvenoSposobanFact($id, false));
 end
