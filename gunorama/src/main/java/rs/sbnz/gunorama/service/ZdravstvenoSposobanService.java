@@ -3,6 +3,7 @@ package rs.sbnz.gunorama.service;
 import org.drools.core.ClassObjectFilter;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.rule.FactHandle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.sbnz.gunorama.model.Korisnik;
@@ -33,11 +34,12 @@ public class ZdravstvenoSposobanService {
         questionnaire.setZahtjevId(zahtjev.getId());
         KieSession kieSession = kieContainer.newKieSession();
         kieSession.insert(zahtjev);
-        kieSession.insert(questionnaire);
+        FactHandle questionnaireFactHandle = kieSession.insert(questionnaire);
         kieSession.getAgenda().getAgendaGroup("Zdravstvena evaluacija").setFocus();
         kieSession.fireAllRules();
         Collection<GradjaninZdravstvenoSposobanFact> myFacts = (Collection<GradjaninZdravstvenoSposobanFact>) kieSession.getObjects( new ClassObjectFilter(GradjaninZdravstvenoSposobanFact.class) );
+        kieSession.delete(questionnaireFactHandle);
         kieSession.dispose();
-        return myFacts.stream().filter((fact) -> fact.getZahtjevId().equals(zahtjev.getId())).collect(Collectors.toList()).get(0);
+        return myFacts.stream().filter(fact -> fact.getZahtjevId().equals(zahtjev.getId())).collect(Collectors.toList()).get(0);
     }
 }

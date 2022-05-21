@@ -1,7 +1,6 @@
 package rs.sbnz.gunorama.controller;
 
 
-import org.kie.api.runtime.KieContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,12 +14,10 @@ import rs.sbnz.gunorama.service.ZdravstvenoSposobanService;
 @RequestMapping(value = "/api/zdravstveno-sposoban")
 public class ZdravstvenoSposobanController {
 
-    private final KieContainer kieContainer;
     private final ZdravstvenoSposobanService zdravstvenoSposobanService;
 
     @Autowired
-    public ZdravstvenoSposobanController(KieContainer kieContainer, ZdravstvenoSposobanService zdravstvenoSposobanService) {
-        this.kieContainer = kieContainer;
+    public ZdravstvenoSposobanController(ZdravstvenoSposobanService zdravstvenoSposobanService) {
         this.zdravstvenoSposobanService = zdravstvenoSposobanService;
     }
 

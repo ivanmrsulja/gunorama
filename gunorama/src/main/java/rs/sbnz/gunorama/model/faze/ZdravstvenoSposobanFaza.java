@@ -1,8 +1,7 @@
 package rs.sbnz.gunorama.model.faze;
 
-public class ZdravstvenoSposobanFaza {
+public class ZdravstvenoSposobanFaza extends Faza{
 
-    private Integer zahtjevId;
 
     private Double dioptrija;
 
@@ -10,9 +9,9 @@ public class ZdravstvenoSposobanFaza {
 
     private boolean prosaoPsihijatrijskuEvaluaciju;
 
-    public ZdravstvenoSposobanFaza() {}
 
     public ZdravstvenoSposobanFaza(Double dioptrija, Integer zahtjevId, boolean prosaoPsiholoskuEvaluaciju, boolean prosaoPsihijatrijskuEvaluaciju) {
+        super(zahtjevId);
         this.dioptrija = dioptrija;
         this.zahtjevId = zahtjevId;
         this.prosaoPsiholoskuEvaluaciju = prosaoPsiholoskuEvaluaciju;
@@ -25,14 +24,6 @@ public class ZdravstvenoSposobanFaza {
 
     public void setDioptrija(Double dioptrija) {
         this.dioptrija = dioptrija;
-    }
-
-    public Integer getZahtjevId() {
-        return zahtjevId;
-    }
-
-    public void setZahtjevId(Integer zahtjevId) {
-        this.zahtjevId = zahtjevId;
     }
 
     public boolean isProsaoPsiholoskuEvaluaciju() {

@@ -1,4 +1,27 @@
 package rs.sbnz.gunorama.model.faze;
 
-public class SpecificniZahtjeviFaza {
+import rs.sbnz.gunorama.model.enums.Dokument;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class SpecificniZahtjeviFaza extends Faza{
+
+    private List<Dokument> dokumenti = new ArrayList<>();
+
+
+    public SpecificniZahtjeviFaza(List<Dokument> dokumenti, Integer zahtjevId) {
+        super(zahtjevId);
+        this.dokumenti = dokumenti;
+    }
+
+    public List<Dokument> getDokumenti() {
+        return dokumenti;
+    }
+
+    public void setDokumenti(List<Dokument> dokumenti) {
+        this.dokumenti = dokumenti;
+
+    }
+
 }

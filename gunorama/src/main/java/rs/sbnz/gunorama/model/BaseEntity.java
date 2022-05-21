@@ -12,9 +12,9 @@ public abstract class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Integer id;
 
-    public BaseEntity() {}
+    protected BaseEntity() {}
 
-    public BaseEntity(Integer id) {
+    protected BaseEntity(Integer id) {
         this.id = id;
     }
 
@@ -25,4 +25,6 @@ public abstract class BaseEntity {
     public void setId(Integer id) {
         this.id = id;
     }
+
+
 }
