@@ -1,8 +1,12 @@
 package rs.sbnz.gunorama.model.faze;
 
 
-public class KonkretnaNamjenaFaza extends Faza {
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
+public class KonkretnaNamjenaFaza extends Faza {
 
     private Double tezinaDivljaci;
 
@@ -27,52 +31,4 @@ public class KonkretnaNamjenaFaza extends Faza {
         this.posjedovanjeIzabrano = posjedovanjeIzabrano;
     }
 
-
-    public Double getTezinaDivljaci() {
-        return tezinaDivljaci;
-    }
-
-    public void setTezinaDivljaci(Double tezinaDivljaci) {
-        this.tezinaDivljaci = tezinaDivljaci;
-    }
-
-    public Double getDaljinaMete() {
-        return daljinaMete;
-    }
-
-    public void setDaljinaMete(Double daljinaMete) {
-        this.daljinaMete = daljinaMete;
-    }
-
-    public Boolean getSkitIzabran() {
-        return skitIzabran;
-    }
-
-    public void setSkitIzabran(Boolean skitIzabran) {
-        this.skitIzabran = skitIzabran;
-    }
-
-    public Boolean getTrapIzabran() {
-        return trapIzabran;
-    }
-
-    public void setTrapIzabran(Boolean trapIzabran) {
-        this.trapIzabran = trapIzabran;
-    }
-
-    public Boolean getNosenjeIzabrano() {
-        return nosenjeIzabrano;
-    }
-
-    public void setNosenjeIzabrano(Boolean nosenjeIzabrano) {
-        this.nosenjeIzabrano = nosenjeIzabrano;
-    }
-
-    public Boolean getPosjedovanjeIzabrano() {
-        return posjedovanjeIzabrano;
-    }
-
-    public void setPosjedovanjeIzabrano(Boolean posjedovanjeIzabrano) {
-        this.posjedovanjeIzabrano = posjedovanjeIzabrano;
-    }
 }

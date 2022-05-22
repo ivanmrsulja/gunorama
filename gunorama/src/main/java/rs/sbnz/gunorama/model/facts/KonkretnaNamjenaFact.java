@@ -8,27 +8,10 @@ public class KonkretnaNamjenaFact {
 
     private Integer zahtjevId;
 
+    public KonkretnaNamjenaFact() {}
+
     public KonkretnaNamjenaFact(KonkretnaNamjena konkretnaNamjena, Integer zahtjevId) {
         this.konkretnaNamjena = konkretnaNamjena;
-        this.zahtjevId = zahtjevId;
-    }
-
-    public KonkretnaNamjenaFact() {
-    }
-
-    public KonkretnaNamjena getKonkretnaNamjena() {
-        return konkretnaNamjena;
-    }
-
-    public void setKonkretnaNamjena(KonkretnaNamjena konkretnaNamjena) {
-        this.konkretnaNamjena = konkretnaNamjena;
-    }
-
-    public Integer getZahtjevId() {
-        return zahtjevId;
-    }
-
-    public void setZahtjevId(Integer zahtjevId) {
         this.zahtjevId = zahtjevId;
     }
 }

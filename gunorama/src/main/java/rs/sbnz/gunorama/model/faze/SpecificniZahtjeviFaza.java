@@ -1,10 +1,14 @@
 package rs.sbnz.gunorama.model.faze;
 
+import lombok.Getter;
+import lombok.Setter;
 import rs.sbnz.gunorama.model.enums.Dokument;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 public class SpecificniZahtjeviFaza extends Faza{
 
     private List<Dokument> dokumenti = new ArrayList<>();
@@ -14,14 +18,4 @@ public class SpecificniZahtjeviFaza extends Faza{
         super(zahtjevId);
         this.dokumenti = dokumenti;
     }
-
-    public List<Dokument> getDokumenti() {
-        return dokumenti;
-    }
-
-    public void setDokumenti(List<Dokument> dokumenti) {
-        this.dokumenti = dokumenti;
-
-    }
-
 }

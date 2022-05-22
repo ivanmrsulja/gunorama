@@ -52,6 +52,11 @@
             <version>${kie.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>rs.sbnz</groupId>
             <artifactId>gunorama-rules</artifactId>
             <type>jar</type>
