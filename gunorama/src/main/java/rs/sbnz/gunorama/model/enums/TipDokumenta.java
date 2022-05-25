@@ -1,6 +1,6 @@
 package rs.sbnz.gunorama.model.enums;
 
-public enum Dokument {
+public enum TipDokumenta {
     LICNA_KARTA,
     DOKAZ_O_CLANSTVU_U_STRELJACKOM_KLUBU,
     DOKAZ_O_POLOZENOM_LOVACKOM_ISPITU,

@@ -8,15 +8,14 @@ import rs.sbnz.gunorama.model.enums.DomenPrimjene;
 @Setter
 public class DomenPrimjeneFact {
 
-    private DomenPrimjene domenPrimjene;
-
     private Integer zahtjevId;
 
+    private DomenPrimjene domenPrimjene;
 
     public DomenPrimjeneFact() {
     }
 
-    public DomenPrimjeneFact(DomenPrimjene domenPrimjene, Integer zahtjevId) {
+    public DomenPrimjeneFact(Integer zahtjevId, DomenPrimjene domenPrimjene) {
         this.domenPrimjene = domenPrimjene;
         this.zahtjevId = zahtjevId;
     }

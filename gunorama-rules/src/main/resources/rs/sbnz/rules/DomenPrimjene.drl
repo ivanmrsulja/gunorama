@@ -1,0 +1,89 @@
+package rs.sbnz.rules;
+
+import rs.sbnz.gunorama.model.facts.DomenPrimjeneFact;
+import rs.sbnz.gunorama.model.Zahtjev;
+import rs.sbnz.gunorama.model.Dokument;
+import rs.sbnz.gunorama.model.PotrebanUslov;
+import rs.sbnz.gunorama.model.faze.DomenPrimjeneFaza;
+import rs.sbnz.gunorama.model.enums.TipDokumenta;
+import rs.sbnz.gunorama.model.enums.DomenPrimjene;
+
+// rule "Odredjivanje Domena Primjene - LOV"
+// 	agenda-group "Domen primjene"
+// 	no-loop true
+//     salience $saliencyValue
+//     when
+//         $z: Zahtjev($id: id) and 
+//         $gzs: GradjaninZdravstvenoSposobanFact(zahtjevId == $id, sposoban == true) and
+//         $dpf: DomenPrimjeneFaza(zahtjevId == $id, $dokumenti: dokumenti )
+//         Number($saliencyValue: intValue >= 2) from accumulate(
+//             Dokument( tipDokumenta == TipDokumenta.DOKAZ_O_POLOZENOM_LOVACKOM_ISPITU || tipDokumenta == TipDokumenta.DOKAZ_O_CLANSTVU_U_LOVACKOM_DRUSTVU ) from $dokumenti,
+//             init(int count = 0;),
+//             action(count += 1; ),
+//             reverse(count -= 1;),
+//             result(count)
+//         )
+//         not (DomenPrimjeneFact(zahtjevId == $id))
+//     then
+//     	System.out.println("USAO U PRAVILO LOV");
+//         insert(new DomenPrimjeneFact($id, DomenPrimjene.LOV));
+// end
+
+// rule "Odredjivanje Domena Primjene - LOVNO STRELJASTVO"
+// 	agenda-group "Domen primjene"
+// 	no-loop true
+//     salience $saliencyValue
+//     when
+//         $z: Zahtjev($id: id) and 
+//         $gzs: GradjaninZdravstvenoSposobanFact(zahtjevId == $id, sposoban == true) and
+//         $dpf: DomenPrimjeneFaza(zahtjevId == $id, $dokumenti: dokumenti )
+//         Number($saliencyValue: intValue >= 2) from accumulate(
+//             Dokument( tipDokumenta == TipDokumenta.DOKAZ_O_POLOZENOM_LOVACKOM_ISPITU || tipDokumenta == TipDokumenta.DOKAZ_O_CLANSTVU_U_LOVACKOM_DRUSTVU || tipDokumenta == TipDokumenta.DOKAZ_O_CLANSTVU_U_LOVACKO_STRELJACKOM_DRUSTVU ) from $dokumenti,
+//             init(int count = 0;),
+//             action(count += 1; ),
+//             reverse(count -= 1;),
+//             result(count)
+//         )
+//         not (DomenPrimjeneFact(zahtjevId == $id))
+//     then
+//     	System.out.println("USAO U PRAVILO LOVNO STRELJASTVO");
+//         insert(new DomenPrimjeneFact($id, DomenPrimjene.LOVNO_STRELJASTVO));
+// end
+
+rule "Odredjivanje Domena Primjene - ODREDJEN DOMEN"
+	agenda-group "Domen primjene"
+	no-loop true
+    salience ($saliencyValue * $listaTipovaDokumenata.size() + (100 * ($listaTipovaDokumenata.contains(TipDokumenta.DOKAZ_O_UGROZENOSTI_LICNE_BEZJEDNOSTI) ? 1 : 0)))
+    when
+        $z: Zahtjev($id: id) and 
+        $gzs: GradjaninZdravstvenoSposobanFact(zahtjevId == $id, sposoban == true) and
+        $dpf: DomenPrimjeneFaza(zahtjevId == $id, $dokumenti: dokumenti ) and
+        $pu: PotrebanUslov($domenPrimjene: domenPrimjene, $listaTipovaDokumenata: listaDokumenata) 
+        Number($saliencyValue: intValue >= $listaTipovaDokumenata.size()) from accumulate(
+            Dokument( tipDokumenta memberOf $listaTipovaDokumenata ) from $dokumenti,
+            init(int count = 0;),
+            action(count += 1; ),
+            reverse(count -= 1;),
+            result(count)
+        )
+        not (DomenPrimjeneFact(zahtjevId == $id))
+    then
+    	System.out.println("GRADJANINU ODREDJEN DOMEN PRIMJENE");
+        insert(new DomenPrimjeneFact($id, $domenPrimjene));
+end
+
+rule "Odredjivanje Domena Primjene - NEPOTPUNA DOKUMENTACIJA"
+	agenda-group "Domen primjene"
+	no-loop true
+    salience -1
+    when
+        $z: Zahtjev($id: id) and 
+        $gzs: GradjaninZdravstvenoSposobanFact(zahtjevId == $id, sposoban == true) and
+        $dpf: DomenPrimjeneFaza(zahtjevId == $id, $dokumenti: dokumenti )
+        not (DomenPrimjeneFact(zahtjevId == $id))
+    then
+    	System.out.println("GRADJANINU NIJE ODREDJEN DOMEN PRIMJENE");
+        modify($z) {
+            setRazlogOdbijanja("Gradjanin sadrzi nepotpunu dokumentaciju.");
+        }
+end

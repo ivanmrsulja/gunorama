@@ -5,16 +5,15 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import rs.sbnz.gunorama.model.Kalibar;
 import rs.sbnz.gunorama.model.Oruzje;
-import rs.sbnz.gunorama.model.enums.KonkretnaNamjena;
-import rs.sbnz.gunorama.model.enums.MehanizamHranjenja;
-import rs.sbnz.gunorama.model.enums.MehanizamOkidanja;
+import rs.sbnz.gunorama.model.PotrebanUslov;
+import rs.sbnz.gunorama.model.enums.*;
 import rs.sbnz.gunorama.repository.KalibarRepository;
 import rs.sbnz.gunorama.repository.OruzjeRepository;
+import rs.sbnz.gunorama.repository.PotrebanUslovRepository;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 
 @Component
@@ -24,9 +23,14 @@ public class DbInitializer implements ApplicationRunner {
 
     private final OruzjeRepository oruzjeRepository;
 
-    public DbInitializer(KalibarRepository kalibarRepository, OruzjeRepository oruzjeRepository) {
+    private final PotrebanUslovRepository potrebanUslovRepository;
+
+    public DbInitializer(KalibarRepository kalibarRepository,
+                         OruzjeRepository oruzjeRepository,
+                         PotrebanUslovRepository potrebanUslovRepository) {
         this.kalibarRepository = kalibarRepository;
         this.oruzjeRepository = oruzjeRepository;
+        this.potrebanUslovRepository = potrebanUslovRepository;
     }
 
     @Override
@@ -61,5 +65,15 @@ public class DbInitializer implements ApplicationRunner {
         oruzjeRepository.save(o4);
         oruzjeRepository.save(o5);
         oruzjeRepository.save(o6);
+
+        PotrebanUslov pu1 = new PotrebanUslov(DomenPrimjene.LOV, new ArrayList<>(Arrays.asList(TipDokumenta.DOKAZ_O_CLANSTVU_U_LOVACKOM_DRUSTVU, TipDokumenta.DOKAZ_O_POLOZENOM_LOVACKOM_ISPITU, TipDokumenta.DOKAZ_O_NEOSUDJIVANOSTI_ZA_NASILNA_KRIVICNA_DJELA)));
+        PotrebanUslov pu2 = new PotrebanUslov(DomenPrimjene.LOVNO_STRELJASTVO, new ArrayList<>(Arrays.asList(TipDokumenta.DOKAZ_O_CLANSTVU_U_LOVACKOM_DRUSTVU, TipDokumenta.DOKAZ_O_POLOZENOM_LOVACKOM_ISPITU, TipDokumenta.DOKAZ_O_CLANSTVU_U_LOVACKO_STRELJACKOM_DRUSTVU, TipDokumenta.DOKAZ_O_NEOSUDJIVANOSTI_ZA_NASILNA_KRIVICNA_DJELA)));
+        PotrebanUslov pu3 = new PotrebanUslov(DomenPrimjene.STRELJASTVO, new ArrayList<>(Arrays.asList(TipDokumenta.DOKAZ_O_CLANSTVU_U_STRELJACKOM_KLUBU, TipDokumenta.DOKAZ_O_POLOZENOJ_OBUCI_ZA_RUKOVANJE_ORUZJEM, TipDokumenta.DOKAZ_O_NEOSUDJIVANOSTI_ZA_NASILNA_KRIVICNA_DJELA)));
+        PotrebanUslov pu4 = new PotrebanUslov(DomenPrimjene.SAMOODBRANA, new ArrayList<>(Arrays.asList(TipDokumenta.DOKAZ_O_UGROZENOSTI_LICNE_BEZJEDNOSTI, TipDokumenta.DOKAZ_O_NEOSUDJIVANOSTI_ZA_NASILNA_KRIVICNA_DJELA)));
+
+        potrebanUslovRepository.save(pu1);
+        potrebanUslovRepository.save(pu2);
+        potrebanUslovRepository.save(pu3);
+        potrebanUslovRepository.save(pu4);
     }
 }
