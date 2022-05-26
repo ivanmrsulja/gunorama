@@ -13,4 +13,6 @@ import rs.sbnz.gunorama.model.enums.TipDokumenta;
 public class Dokument {
 
     private TipDokumenta tipDokumenta;
+
+    private int prioritet;
 }

@@ -12,7 +12,7 @@ rule "Gradjanin Zdravstveno Sposoban - prosao evaluaciju"
         $z: Zahtjev($id: id) and
         $zsf: ZdravstvenoSposobanFaza(zahtjevId == $id, dioptrija >= -1.0, dioptrija <= 1.0, prosaoPsiholoskuEvaluaciju == true, prosaoPsihijatrijskuEvaluaciju == true)
     then
-    	System.out.println("GRADJANIN PROLAZI EVALUACIJU ");
+    	System.out.println("GRADJANIN PROLAZI LJEKARSKU EVALUACIJU ");
     	insert(new GradjaninZdravstvenoSposobanFact($id, true));
 end
 
@@ -28,7 +28,7 @@ rule "Gradjanin Zdravstveno Sposoban - pao evaluaciju"
         $zsf: ZdravstvenoSposobanFaza(zahtjevId == $id, prosaoPsihijatrijskuEvaluaciju == false)
         )
     then
-    	System.out.println("GRADJANIN PADA EVALUACIJU");
+    	System.out.println("GRADJANIN PADA LJEKARSKU EVALUACIJU");
         modify($z) {
             setRazlogOdbijanja("Gradjanin nije zdravstveno sposoban.");
         }

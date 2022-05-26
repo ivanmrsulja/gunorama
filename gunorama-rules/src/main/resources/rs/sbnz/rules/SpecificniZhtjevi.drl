@@ -1,0 +1,69 @@
+package rs.sbnz.rules;
+
+import rs.sbnz.gunorama.model.facts.DomenPrimjeneFact;
+import rs.sbnz.gunorama.model.Zahtjev;
+import rs.sbnz.gunorama.model.Dokument;
+import rs.sbnz.gunorama.model.PotrebanUslov;
+import rs.sbnz.gunorama.model.faze.SpecificniZahtjeviFaza;
+import rs.sbnz.gunorama.model.enums.TipDokumenta;
+import rs.sbnz.gunorama.model.enums.DomenPrimjene;
+
+
+rule "Specificni zahtjevi za domen primjene - LOV, LOVNO STRELJASTVO I STRELJASTVO"
+	agenda-group "Specificni zahtjevi za domen primjene"
+	no-loop true
+    salience 1
+    when
+        $z: Zahtjev($id: id) and 
+        $gzs: DomenPrimjeneFact(zahtjevId == $id, $domenPrimjene: domenPrimjene, $domenPrimjene == DomenPrimjene.LOV || $domenPrimjene == DomenPrimjene.LOVNO_STRELJASTVO || $domenPrimjene == DomenPrimjene.STRELJASTVO) and
+        $dpf: SpecificniZahtjeviFaza(zahtjevId == $id, $dokumenti: dokumenti )
+        Number(intValue >= 1) from accumulate(
+            Dokument($tipDokumenta: tipDokumenta, $tipDokumenta == TipDokumenta.DOKAZ_O_PLACENOJ_CLANARINI_U_LOVACKOM_ILI_STRELJACKOM_KLUBU ) from $dokumenti,
+            count($tipDokumenta)
+        )
+    then
+    	System.out.println("GRADJANIN ISPUNJAVA SPECIFICNE ZAHTJEVE ZA LOV, LOVNO STRELJASTVO I STRELJASTVO");
+        modify($z) {
+            setOdobren(true);
+        }
+end
+
+rule "Specificni zahtjevi za domen primjene - SAMOODBRANA"
+	agenda-group "Specificni zahtjevi za domen primjene"
+	no-loop true
+    salience 1
+    when
+        $z: Zahtjev($id: id) and 
+        $gzs: DomenPrimjeneFact(zahtjevId == $id, $domenPrimjene: domenPrimjene, $domenPrimjene == DomenPrimjene.SAMOODBRANA) and
+        $dpf: SpecificniZahtjeviFaza(zahtjevId == $id, $dokumenti: dokumenti )
+        Number(intValue >= 2) from accumulate(
+            Dokument($tipDokumenta: tipDokumenta, $tipDokumenta == TipDokumenta.DOKAZ_O_UPLACENIM_NEOPHODNIM_TAKSAMA || $tipDokumenta == TipDokumenta.LICNA_KARTA ) from $dokumenti,
+            count($tipDokumenta)
+        )
+    then
+    	System.out.println("USAO U SPECIFICNE ZAHTJEVE ZA SAMOODBRANU");
+        modify($z) {
+            setOdobren(true);
+        }
+end
+
+rule "Specificni zahtjevi za domen primjene - NEPOTPUNA DOKUMENTACIJA"
+	agenda-group "Specificni zahtjevi za domen primjene"
+	no-loop true
+    salience -1
+    when
+        $z: Zahtjev($id: id, odobren == false) and 
+        $gzs: DomenPrimjeneFact(zahtjevId == $id) and
+        $dpf: SpecificniZahtjeviFaza(zahtjevId == $id, $dokumenti: dokumenti)
+        $tipoviDokumenata: List() from accumulate ( 
+            Dokument($tipDokumenta: tipDokumenta) from $dokumenti,
+            collectList($tipDokumenta)
+        )
+    then
+    	System.out.println("USAO U SPECIFICNE ZAHTJEVE ZA SAMOODBRANU");
+        modify($z) {
+            setRazlogOdbijanja("Gradjanin je podnio nepotpunu specificnu dokumentaciju."),
+            setOdobren(false),
+            setDokumenti($tipoviDokumenata);
+        }
+end
