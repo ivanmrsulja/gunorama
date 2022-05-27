@@ -1,6 +1,8 @@
 package rs.sbnz.gunorama.model.facts;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import rs.sbnz.gunorama.model.Oruzje;
 
@@ -8,13 +10,12 @@ import java.util.List;
 
 @Getter
 @Setter
-public class PreporucenoOruzjeFact {
+public class PreporucenoOruzjeFact extends Fact{
 
     List<Oruzje> preporucenoOruzje;
 
-    public PreporucenoOruzjeFact() {}
-
-    public PreporucenoOruzjeFact(List<Oruzje> preporucenoOruzje) {
+    public PreporucenoOruzjeFact(Integer zahtjevId, List<Oruzje> preporucenoOruzje) {
+        super(zahtjevId);
         this.preporucenoOruzje = preporucenoOruzje;
     }
 }

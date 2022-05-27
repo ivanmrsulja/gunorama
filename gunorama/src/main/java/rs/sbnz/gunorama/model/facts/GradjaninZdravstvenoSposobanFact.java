@@ -5,16 +5,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class GradjaninZdravstvenoSposobanFact {
-
-    private Integer zahtjevId;
+public class GradjaninZdravstvenoSposobanFact extends Fact{
 
     private boolean sposoban;
 
-    public GradjaninZdravstvenoSposobanFact() {}
-
     public GradjaninZdravstvenoSposobanFact(Integer zahtjevId, boolean sposoban) {
-        this.zahtjevId = zahtjevId;
+        super(zahtjevId);
         this.sposoban = sposoban;
     }
 }

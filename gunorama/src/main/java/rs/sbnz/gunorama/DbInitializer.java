@@ -6,10 +6,12 @@ import org.springframework.stereotype.Component;
 import rs.sbnz.gunorama.model.Kalibar;
 import rs.sbnz.gunorama.model.Oruzje;
 import rs.sbnz.gunorama.model.PotrebanUslov;
+import rs.sbnz.gunorama.model.Zahtjev;
 import rs.sbnz.gunorama.model.enums.*;
 import rs.sbnz.gunorama.repository.KalibarRepository;
 import rs.sbnz.gunorama.repository.OruzjeRepository;
 import rs.sbnz.gunorama.repository.PotrebanUslovRepository;
+import rs.sbnz.gunorama.repository.ZahtjevRepository;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -25,12 +27,15 @@ public class DbInitializer implements ApplicationRunner {
 
     private final PotrebanUslovRepository potrebanUslovRepository;
 
+    private final ZahtjevRepository zahtjevRepository;
+
     public DbInitializer(KalibarRepository kalibarRepository,
                          OruzjeRepository oruzjeRepository,
-                         PotrebanUslovRepository potrebanUslovRepository) {
+                         PotrebanUslovRepository potrebanUslovRepository, ZahtjevRepository zahtjevRepository) {
         this.kalibarRepository = kalibarRepository;
         this.oruzjeRepository = oruzjeRepository;
         this.potrebanUslovRepository = potrebanUslovRepository;
+        this.zahtjevRepository = zahtjevRepository;
     }
 
     @Override
@@ -44,13 +49,7 @@ public class DbInitializer implements ApplicationRunner {
         Kalibar k6 = new Kalibar(".22 WMRF", new ArrayList<>(Arrays.asList(KonkretnaNamjena.DALEKOMETNO_GADJANJE)));
         Kalibar k7 = new Kalibar("16GA_BUCKSHOT", new ArrayList<>(Arrays.asList(KonkretnaNamjena.POSJEDOVANJE, KonkretnaNamjena.LOV_SITNE_DIVLJACI, KonkretnaNamjena.TRAP)));
 
-        kalibarRepository.save(k1);
-        kalibarRepository.save(k2);
-        kalibarRepository.save(k3);
-        kalibarRepository.save(k4);
-        kalibarRepository.save(k5);
-        kalibarRepository.save(k6);
-        kalibarRepository.save(k7);
+        kalibarRepository.saveAll(Arrays.asList(k1, k2, k3, k4, k5, k6, k7));
 
         Oruzje o1 = new Oruzje("Beretta M9", new HashSet<>(Arrays.asList(k1)), MehanizamHranjenja.POLUAUTOMATSKI, MehanizamOkidanja.OTVORENI);
         Oruzje o2 = new Oruzje("Zastava MP22", new HashSet<>(Arrays.asList(k5, k6)), MehanizamHranjenja.OBRTNOCEPNI, MehanizamOkidanja.ZATVORENI);
@@ -59,21 +58,35 @@ public class DbInitializer implements ApplicationRunner {
         Oruzje o5 = new Oruzje("TOZ 63", new HashSet<>(Arrays.asList(k7)), MehanizamHranjenja.PREKLAPAJUCI, MehanizamOkidanja.OTVORENI);
         Oruzje o6 = new Oruzje("Zastava LK M70", new HashSet<>(Arrays.asList(k3)), MehanizamHranjenja.OBRTNOCEPNI, MehanizamOkidanja.ZATVORENI);
 
-        oruzjeRepository.save(o1);
-        oruzjeRepository.save(o2);
-        oruzjeRepository.save(o3);
-        oruzjeRepository.save(o4);
-        oruzjeRepository.save(o5);
-        oruzjeRepository.save(o6);
+        oruzjeRepository.saveAll(Arrays.asList(o1, o2, o3, o4, o5, o6));
 
         PotrebanUslov pu1 = new PotrebanUslov(DomenPrimjene.LOV, new ArrayList<>(Arrays.asList(TipDokumenta.DOKAZ_O_CLANSTVU_U_LOVACKOM_DRUSTVU, TipDokumenta.DOKAZ_O_POLOZENOM_LOVACKOM_ISPITU, TipDokumenta.DOKAZ_O_NEOSUDJIVANOSTI_ZA_NASILNA_KRIVICNA_DJELA)));
         PotrebanUslov pu2 = new PotrebanUslov(DomenPrimjene.LOVNO_STRELJASTVO, new ArrayList<>(Arrays.asList(TipDokumenta.DOKAZ_O_CLANSTVU_U_LOVACKOM_DRUSTVU, TipDokumenta.DOKAZ_O_POLOZENOM_LOVACKOM_ISPITU, TipDokumenta.DOKAZ_O_CLANSTVU_U_LOVACKO_STRELJACKOM_DRUSTVU, TipDokumenta.DOKAZ_O_NEOSUDJIVANOSTI_ZA_NASILNA_KRIVICNA_DJELA)));
         PotrebanUslov pu3 = new PotrebanUslov(DomenPrimjene.STRELJASTVO, new ArrayList<>(Arrays.asList(TipDokumenta.DOKAZ_O_CLANSTVU_U_STRELJACKOM_KLUBU, TipDokumenta.DOKAZ_O_POLOZENOJ_OBUCI_ZA_RUKOVANJE_ORUZJEM, TipDokumenta.DOKAZ_O_NEOSUDJIVANOSTI_ZA_NASILNA_KRIVICNA_DJELA)));
         PotrebanUslov pu4 = new PotrebanUslov(DomenPrimjene.SAMOODBRANA, new ArrayList<>(Arrays.asList(TipDokumenta.DOKAZ_O_UGROZENOSTI_LICNE_BEZJEDNOSTI, TipDokumenta.DOKAZ_O_NEOSUDJIVANOSTI_ZA_NASILNA_KRIVICNA_DJELA)));
 
-        potrebanUslovRepository.save(pu1);
-        potrebanUslovRepository.save(pu2);
-        potrebanUslovRepository.save(pu3);
-        potrebanUslovRepository.save(pu4);
+        potrebanUslovRepository.saveAll(Arrays.asList(pu1, pu2, pu3, pu4));
+
+        Zahtjev z1 = new Zahtjev();
+        z1.setOdobren(true);
+        z1.setDomenPrimjene(DomenPrimjene.LOVNO_STRELJASTVO);
+
+        Zahtjev z2 = new Zahtjev();
+        z2.setOdobren(true);
+        z2.setDomenPrimjene(DomenPrimjene.LOV);
+
+        Zahtjev z3 = new Zahtjev();
+        z3.setOdobren(true);
+        z3.setDomenPrimjene(DomenPrimjene.STRELJASTVO);
+
+        Zahtjev z4 = new Zahtjev();
+        z4.setOdobren(true);
+        z4.setDomenPrimjene(DomenPrimjene.SAMOODBRANA);
+
+        zahtjevRepository.saveAll(Arrays.asList(z1, z2, z3, z4));
+
+
+
+
     }
 }

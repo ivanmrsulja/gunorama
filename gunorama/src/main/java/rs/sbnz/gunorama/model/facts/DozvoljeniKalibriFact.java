@@ -8,13 +8,12 @@ import java.util.List;
 
 @Getter
 @Setter
-public class DozvoljeniKalibriFact {
+public class DozvoljeniKalibriFact extends Fact{
 
     List<Kalibar> dozvoljeniKalibri;
 
-    public DozvoljeniKalibriFact() {}
-
-    public DozvoljeniKalibriFact(List<Kalibar> dozvoljeniKalibri) {
+    public DozvoljeniKalibriFact(Integer zahtjevId, List<Kalibar> dozvoljeniKalibri) {
+        super(zahtjevId);
         this.dozvoljeniKalibri = dozvoljeniKalibri;
     }
 }

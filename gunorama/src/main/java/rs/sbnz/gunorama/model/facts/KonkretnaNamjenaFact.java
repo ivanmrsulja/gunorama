@@ -1,17 +1,19 @@
 package rs.sbnz.gunorama.model.facts;
 
+import lombok.Getter;
+import lombok.Setter;
 import rs.sbnz.gunorama.model.enums.KonkretnaNamjena;
 
-public class KonkretnaNamjenaFact {
+
+@Getter
+@Setter
+public class KonkretnaNamjenaFact extends Fact{
 
     private KonkretnaNamjena konkretnaNamjena;
 
-    private Integer zahtjevId;
 
-    public KonkretnaNamjenaFact() {}
-
-    public KonkretnaNamjenaFact(KonkretnaNamjena konkretnaNamjena, Integer zahtjevId) {
+    public KonkretnaNamjenaFact(Integer zahtjevId, KonkretnaNamjena konkretnaNamjena) {
+        super(zahtjevId);
         this.konkretnaNamjena = konkretnaNamjena;
-        this.zahtjevId = zahtjevId;
     }
 }

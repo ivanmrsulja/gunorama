@@ -16,6 +16,7 @@ import java.util.List;
 @Table(name = "zahtjevi")
 public class Zahtjev extends BaseEntity {
 
+
     @ManyToOne(fetch = FetchType.EAGER)
     private Korisnik korisnik;
 
