@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.sbnz.gunorama.dto.KorisnickiUpitnik;
 import rs.sbnz.gunorama.model.Zahtjev;
-import rs.sbnz.gunorama.model.enums.DomenPrimjene;
 import rs.sbnz.gunorama.model.facts.KonkretnaNamjenaFact;
 import rs.sbnz.gunorama.model.faze.KonkretnaNamjenaFaza;
 import rs.sbnz.gunorama.repository.ZahtjevRepository;
@@ -33,9 +32,8 @@ public class EvaluacijaUpitnikaService {
 
     public KonkretnaNamjenaFact evaluate(KorisnickiUpitnik korisnickiUpitnik) {
 
-        Zahtjev zahtjev = this.zahtjevRepository.save(new Zahtjev());
-        zahtjev.setDomenPrimjene(DomenPrimjene.SAMOODBRANA);
-        zahtjev.setOdobren(true);
+        Zahtjev zahtjev = this.zahtjevRepository.findById(korisnickiUpitnik.getZahtjevId())
+                .orElseThrow(() -> new RuntimeException(String.format("Zahtjev with id: %d not found.", korisnickiUpitnik.getZahtjevId())));
 
         KonkretnaNamjenaFaza konkretnaNamjenaFaza = new KonkretnaNamjenaFaza(
                 zahtjev.getId(),
@@ -55,9 +53,8 @@ public class EvaluacijaUpitnikaService {
         kieSession.fireAllRules();
         kieSession.dispose();
 
-        Collection<KonkretnaNamjenaFact> myFacts = (Collection<KonkretnaNamjenaFact>) kieSession.getObjects( new ClassObjectFilter(KonkretnaNamjenaFact.class) );
+        Collection<KonkretnaNamjenaFact> myFacts = (Collection<KonkretnaNamjenaFact>) kieSession.getObjects(new ClassObjectFilter(KonkretnaNamjenaFact.class));
         kieSession.dispose();
-        return myFacts.stream().filter((fact) -> fact.getZahtjevId().equals(zahtjev.getId())).collect(Collectors.toList()).get(0);
-        //return new KonkretnaNamjenaFact();
+        return myFacts.stream().filter(fact -> fact.getZahtjevId().equals(zahtjev.getId())).collect(Collectors.toList()).get(0);
     }
 }

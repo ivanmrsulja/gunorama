@@ -12,6 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class KorisnickiUpitnik {
 
+    private Integer zahtjevId;
 
     private Double tezinaDivljaci;
 

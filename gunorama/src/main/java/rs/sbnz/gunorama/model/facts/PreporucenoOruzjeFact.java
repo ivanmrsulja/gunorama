@@ -10,10 +10,12 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class PreporucenoOruzjeFact {
+public class PreporucenoOruzjeFact extends Fact{
 
     List<Oruzje> preporucenoOruzje;
 
+    public PreporucenoOruzjeFact(Integer zahtjevId, List<Oruzje> preporucenoOruzje) {
+        super(zahtjevId);
+        this.preporucenoOruzje = preporucenoOruzje;
+    }
 }
