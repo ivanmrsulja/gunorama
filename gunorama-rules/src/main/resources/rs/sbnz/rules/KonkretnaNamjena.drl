@@ -6,9 +6,9 @@ import rs.sbnz.gunorama.model.*;
 import rs.sbnz.gunorama.model.facts.*;
 import rs.sbnz.gunorama.model.faze.*;
 
-//TODO: dodaj salience za ova pravila, provjeru da ne postoji KonkretnaNamjenaFact za dati zahtjev, pravilo da nije odredjena konkretna namjena
+//TODO: dodaj salience za ova pravila
 
-// rule "AAAA"
+// rule "Odredivanje konkretne namjene - opsto"
 //   agenda-group "Konkretna namjena"
 // 	no-loop true
 //   salience -1
@@ -162,4 +162,20 @@ rule "Odredjivanje konkretne namjene - posjedovanje"
       insert(new KonkretnaNamjenaFact($id, KonkretnaNamjena.POSJEDOVANJE));
 
       System.out.println("\n=======\nUPAO SAM U PRAVILO ZA KONKRETNU NAMJENU - POSJEDOVANJE");
+end
+
+
+rule "Nepostojanje konkretne namjene"
+  agenda-group "Konkretna namjena"
+	no-loop true
+  when
+    $z: Zahtjev($id: id, $domenPrimjene: domenPrimjene, odobren == true) and 
+    $konkretnaNamjenaFaza: KonkretnaNamjenaFaza(zahtjevId == $id, tezinaDivljaci == null, daljinaMete == null, skitIzabran == null, trapIzabran == null, nosenjeIzabrano == null, posjedovanjeIzabrano == null)
+    not (KonkretnaNamjenaFact(zahtjevId == $id))
+    then
+      modify($z) {
+        setKonkretnaNamjena(null);
+      }
+      insert(new KonkretnaNamjenaFact($id, null));
+      System.out.println("NIJE ODREDJENA KONKRETNA NAMJENA");
 end
