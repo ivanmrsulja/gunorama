@@ -1,0 +1,134 @@
+package rs.sbnz.rules;
+
+
+import rs.sbnz.gunorama.model.enums.*;
+import rs.sbnz.gunorama.model.*;
+import rs.sbnz.gunorama.model.facts.*;
+import rs.sbnz.gunorama.model.faze.*;
+
+//TODO: dodaj salience za ova pravila
+
+rule "Odredjivanje konkretne namjene - lov krupne divljaci"
+  agenda-group "Konkretna namjena"
+	no-loop true
+  when
+    $z: Zahtjev($id: id, $domenPrimjene: domenPrimjene, domenPrimjene == DomenPrimjene.LOV, odobren == true) and 
+    $konkretnaNamjenaFaza: KonkretnaNamjenaFaza(zahtjevId == $id, tezinaDivljaci >= 70)
+    then
+      modify($z) {
+        setKonkretnaNamjena(KonkretnaNamjena.LOV_KRUPNE_DIVLJACI);
+      }
+      insert(new KonkretnaNamjenaFact(KonkretnaNamjena.LOV_KRUPNE_DIVLJACI, $id));
+
+      System.out.println("UPAO SAM U PRAVILO ZA KONKRETNU NAMJENU - LOV KRUPNE DIVLJACI");
+end 
+
+rule "Odredjivanje konkretne namjene - lov sitne divljaci"
+  agenda-group "Konkretna namjena"
+	no-loop true
+  when
+    $z: Zahtjev($id: id, $domenPrimjene: domenPrimjene, domenPrimjene == DomenPrimjene.LOV, odobren == true) and 
+    $konkretnaNamjenaFaza: KonkretnaNamjenaFaza(zahtjevId == $id, tezinaDivljaci < 70)
+    then
+      modify($z) {
+        setKonkretnaNamjena(KonkretnaNamjena.LOV_SITNE_DIVLJACI);
+      }
+      insert(new KonkretnaNamjenaFact(KonkretnaNamjena.LOV_SITNE_DIVLJACI, $id));
+
+      System.out.println("UPAO SAM U PRAVILO ZA KONKRETNU NAMJENU - LOV SITNE DIVLJACI");
+end 
+
+rule "Odredjivanje konkretne namjene - skit"
+  agenda-group "Konkretna namjena"
+	no-loop true
+  when
+    $z: Zahtjev($id: id, $domenPrimjene: domenPrimjene, domenPrimjene == DomenPrimjene.LOVNO_STRELJASTVO, odobren == true) and 
+    $konkretnaNamjenaFaza: KonkretnaNamjenaFaza(zahtjevId == $id, skitIzabran == true)
+    then
+      modify($z) {
+        setKonkretnaNamjena(KonkretnaNamjena.SKIT);
+      }
+      insert(new KonkretnaNamjenaFact(KonkretnaNamjena.SKIT, $id));
+
+      System.out.println("UPAO SAM U PRAVILO ZA KONKRETNU NAMJENU - SKIT");
+end 
+
+
+rule "Odredjivanje konkretne namjene - trap"
+  agenda-group "Konkretna namjena"
+	no-loop true
+  when
+    $z: Zahtjev($id: id, $domenPrimjene: domenPrimjene, domenPrimjene == DomenPrimjene.LOVNO_STRELJASTVO, odobren == true) and 
+    $konkretnaNamjenaFaza: KonkretnaNamjenaFaza(zahtjevId == $id, trapIzabran == true)
+    then
+      modify($z) {
+        setKonkretnaNamjena(KonkretnaNamjena.TRAP);
+      }
+      insert(new KonkretnaNamjenaFact(KonkretnaNamjena.TRAP, $id));
+
+      System.out.println("UPAO SAM U PRAVILO ZA KONKRETNU NAMJENU - TRAP");
+end 
+
+
+rule "Odredjivanje konkretne namjene - dalekometno gadjanje"
+  agenda-group "Konkretna namjena"
+	no-loop true
+  when
+    $z: Zahtjev($id: id, $domenPrimjene: domenPrimjene, domenPrimjene == DomenPrimjene.STRELJASTVO, odobren == true) and 
+    $konkretnaNamjenaFaza: KonkretnaNamjenaFaza(zahtjevId == $id, daljinaMete >= 50)
+    then
+      modify($z) {
+        setKonkretnaNamjena(KonkretnaNamjena.DALEKOMETNO_GADJANJE);
+      }
+      insert(new KonkretnaNamjenaFact(KonkretnaNamjena.DALEKOMETNO_GADJANJE, $id));
+
+      System.out.println("UPAO SAM U PRAVILO ZA KONKRETNU NAMJENU - DALEKOMETNO GADJANJE");
+end 
+
+
+rule "Odredjivanje konkretne namjene - kratkometno gadjanje"
+  agenda-group "Konkretna namjena"
+	no-loop true
+  when
+    $z: Zahtjev($id: id, $domenPrimjene: domenPrimjene, domenPrimjene == DomenPrimjene.STRELJASTVO, odobren == true) and 
+    $konkretnaNamjenaFaza: KonkretnaNamjenaFaza(zahtjevId == $id, daljinaMete < 50)
+    then
+      modify($z) {
+        setKonkretnaNamjena(KonkretnaNamjena.KRATKOMETNO_GADJANJE);
+      }
+      insert(new KonkretnaNamjenaFact(KonkretnaNamjena.KRATKOMETNO_GADJANJE, $id));
+
+      System.out.println("UPAO SAM U PRAVILO ZA KONKRETNU NAMJENU - KRATKOMETNO GADJANJE");
+end
+
+
+rule "Odredjivanje konkretne namjene - nosenje"
+  agenda-group "Konkretna namjena"
+	no-loop true
+  when
+    $z: Zahtjev($id: id, $domenPrimjene: domenPrimjene, domenPrimjene == DomenPrimjene.SAMOODBRANA, odobren == true) and 
+    $konkretnaNamjenaFaza: KonkretnaNamjenaFaza(zahtjevId == $id, nosenjeIzabrano == true)
+    then
+      modify($z) {
+        setKonkretnaNamjena(KonkretnaNamjena.NOSENJE);
+      }
+      insert(new KonkretnaNamjenaFact(KonkretnaNamjena.NOSENJE, $id));
+
+      System.out.println("UPAO SAM U PRAVILO ZA KONKRETNU NAMJENU - NOSENJE");
+end
+
+
+rule "Odredjivanje konkretne namjene - posjedovanje"
+  agenda-group "Konkretna namjena"
+	no-loop true
+  when
+    $z: Zahtjev($id: id, $domenPrimjene: domenPrimjene, domenPrimjene == DomenPrimjene.SAMOODBRANA, odobren == true) and 
+    $konkretnaNamjenaFaza: KonkretnaNamjenaFaza(zahtjevId == $id, posjedovanjeIzabrano == true)
+    then
+      modify($z) {
+        setKonkretnaNamjena(KonkretnaNamjena.POSJEDOVANJE);
+      }
+      insert(new KonkretnaNamjenaFact(KonkretnaNamjena.POSJEDOVANJE, $id));
+
+      System.out.println("UPAO SAM U PRAVILO ZA KONKRETNU NAMJENU - POSJEDOVANJE");
+end

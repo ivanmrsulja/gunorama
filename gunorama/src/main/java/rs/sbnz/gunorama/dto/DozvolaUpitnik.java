@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class DozvolaUpitnik {
 
-    private String emailKorinika;
+    private String emailKorisnika;
 
     private Double dioptrija;
 
