@@ -12,7 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "weapons")
+@Table(name = "oruzje")
 public class Oruzje extends BaseEntity {
 
     @Column(name = "naziv", nullable = false)

@@ -17,6 +17,7 @@ import rs.sbnz.gunorama.model.faze.ZdravstvenoSposobanFaza;
 import rs.sbnz.gunorama.repository.KorisnikRepository;
 import rs.sbnz.gunorama.repository.PotrebanUslovRepository;
 import rs.sbnz.gunorama.repository.ZahtjevRepository;
+import rs.sbnz.gunorama.util.PasswordGenerator;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -63,7 +64,7 @@ public class EvaluacijaZahtjevaService {
 
         Korisnik k;
         Optional<Korisnik> optionalKorisnik = korisnikRepository.findOneByEmail(questionnaire.getEmailKorinika());
-        k = optionalKorisnik.orElseGet(() -> new Korisnik(1, "email", "passw"));
+        k = optionalKorisnik.orElseGet(() -> new Korisnik(questionnaire.getEmailKorinika(), String.valueOf(PasswordGenerator.generatePassword(12))));
         korisnikRepository.save(k);
 
         zahtjev.setKorisnik(k);

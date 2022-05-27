@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "licence_requests")
+@Table(name = "zahtjevi")
 public class Zahtjev extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)

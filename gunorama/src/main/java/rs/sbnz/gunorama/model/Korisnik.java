@@ -10,7 +10,7 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
+@Table(name = "korisnici")
 public class Korisnik extends BaseEntity {
 
     @Column(name = "email", nullable = false)
@@ -21,8 +21,8 @@ public class Korisnik extends BaseEntity {
 
     public Korisnik() {}
 
-    public Korisnik(Integer id, String email, String password) {
-        super(id);
+    public Korisnik(String email, String password) {
+        super();
         this.email = email;
         this.password = password;
     }

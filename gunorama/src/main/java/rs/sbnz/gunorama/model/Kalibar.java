@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "calibers")
+@Table(name = "kalibri")
 public class Kalibar extends BaseEntity{
 
     @Column(name = "naziv", nullable = false)

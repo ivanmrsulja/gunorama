@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "requirements")
+@Table(name = "potrebni_uslovi")
 public class PotrebanUslov extends BaseEntity {
 
     @Column(name = "usage_domain", nullable = false)
