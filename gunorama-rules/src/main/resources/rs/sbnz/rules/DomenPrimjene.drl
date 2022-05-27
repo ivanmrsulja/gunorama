@@ -20,7 +20,7 @@ rule "Odredjivanje Domena Primjene - ODREDJEN DOMEN"
     when
         $z: Zahtjev($id: id) and 
         $gzs: GradjaninZdravstvenoSposobanFact(zahtjevId == $id, sposoban == true) and
-        $dpf: DomenPrimjeneFaza(zahtjevId == $id, $dokumenti: dokumenti ) and
+        $dpf: DomenPrimjeneFaza(zahtjevId == $id, $dokumenti: dokumenti) and
         $pu: PotrebanUslov($domenPrimjene: domenPrimjene, $listaTipovaDokumenata: listaDokumenata) 
         Number($saliencyValue: intValue >= $listaTipovaDokumenata.size()) from accumulate (
             Dokument($tip: tipDokumenta, $tip memberOf $listaTipovaDokumenata) from $dokumenti,
@@ -52,7 +52,7 @@ rule "Odredjivanje Domena Primjene - NEPOTPUNA DOKUMENTACIJA"
     when
         $z: Zahtjev($id: id) and 
         $gzs: GradjaninZdravstvenoSposobanFact(zahtjevId == $id, sposoban == true) and
-        $dpf: DomenPrimjeneFaza(zahtjevId == $id, $dokumenti: dokumenti )
+        $dpf: DomenPrimjeneFaza(zahtjevId == $id, $dokumenti: dokumenti)
         $tipoviDokumenata: List() from accumulate ( 
             Dokument($tipDokumenta: tipDokumenta) from $dokumenti,
             collectList($tipDokumenta)

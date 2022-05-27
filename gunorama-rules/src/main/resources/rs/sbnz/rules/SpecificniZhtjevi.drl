@@ -16,9 +16,9 @@ rule "Specificni zahtjevi za domen primjene - LOV, LOVNO STRELJASTVO I STRELJAST
     when
         $z: Zahtjev($id: id) and 
         $gzs: DomenPrimjeneFact(zahtjevId == $id, $domenPrimjene: domenPrimjene, $domenPrimjene == DomenPrimjene.LOV || $domenPrimjene == DomenPrimjene.LOVNO_STRELJASTVO || $domenPrimjene == DomenPrimjene.STRELJASTVO) and
-        $dpf: SpecificniZahtjeviFaza(zahtjevId == $id, $dokumenti: dokumenti )
-        Number(intValue >= 1) from accumulate(
-            Dokument($tipDokumenta: tipDokumenta, $tipDokumenta == TipDokumenta.DOKAZ_O_PLACENOJ_CLANARINI_U_LOVACKOM_ILI_STRELJACKOM_KLUBU ) from $dokumenti,
+        $dpf: SpecificniZahtjeviFaza(zahtjevId == $id, $dokumenti: dokumenti)
+        Number(intValue >= 1) from accumulate (
+            Dokument($tipDokumenta: tipDokumenta, $tipDokumenta == TipDokumenta.DOKAZ_O_PLACENOJ_CLANARINI_U_LOVACKOM_ILI_STRELJACKOM_KLUBU) from $dokumenti,
             count($tipDokumenta)
         )
     then
@@ -35,9 +35,9 @@ rule "Specificni zahtjevi za domen primjene - SAMOODBRANA"
     when
         $z: Zahtjev($id: id) and 
         $gzs: DomenPrimjeneFact(zahtjevId == $id, $domenPrimjene: domenPrimjene, $domenPrimjene == DomenPrimjene.SAMOODBRANA) and
-        $dpf: SpecificniZahtjeviFaza(zahtjevId == $id, $dokumenti: dokumenti )
-        Number(intValue >= 2) from accumulate(
-            Dokument($tipDokumenta: tipDokumenta, $tipDokumenta == TipDokumenta.DOKAZ_O_UPLACENIM_NEOPHODNIM_TAKSAMA || $tipDokumenta == TipDokumenta.LICNA_KARTA ) from $dokumenti,
+        $dpf: SpecificniZahtjeviFaza(zahtjevId == $id, $dokumenti: dokumenti)
+        Number(intValue >= 2) from accumulate (
+            Dokument($tipDokumenta: tipDokumenta, $tipDokumenta == TipDokumenta.DOKAZ_O_UPLACENIM_NEOPHODNIM_TAKSAMA || $tipDokumenta == TipDokumenta.LICNA_KARTA) from $dokumenti,
             count($tipDokumenta)
         )
     then

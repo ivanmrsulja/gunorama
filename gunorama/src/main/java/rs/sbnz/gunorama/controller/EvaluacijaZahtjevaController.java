@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import rs.sbnz.gunorama.dto.DozvolaUpitnik;
 import rs.sbnz.gunorama.model.Zahtjev;
 import rs.sbnz.gunorama.model.faze.ZdravstvenoSposobanFaza;
 import rs.sbnz.gunorama.service.EvaluacijaZahtjevaService;
@@ -22,7 +23,7 @@ public class EvaluacijaZahtjevaController {
     }
 
     @PostMapping
-    public Zahtjev evaluateQuestionnaire(@RequestBody ZdravstvenoSposobanFaza questionnaire) {
+    public Zahtjev evaluateQuestionnaire(@RequestBody DozvolaUpitnik questionnaire) {
         return evaluacijaZahtjevaService.evaluateQuestionnaire(questionnaire);
     }
 }

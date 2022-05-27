@@ -14,7 +14,7 @@ public class ZdravstvenoSposobanFaza extends Faza{
     private boolean prosaoPsihijatrijskuEvaluaciju;
 
 
-    public ZdravstvenoSposobanFaza(Double dioptrija, Integer zahtjevId, boolean prosaoPsiholoskuEvaluaciju, boolean prosaoPsihijatrijskuEvaluaciju) {
+    public ZdravstvenoSposobanFaza(Integer zahtjevId, Double dioptrija, boolean prosaoPsiholoskuEvaluaciju, boolean prosaoPsihijatrijskuEvaluaciju) {
         super(zahtjevId);
         this.dioptrija = dioptrija;
         this.zahtjevId = zahtjevId;
