@@ -40,7 +40,7 @@ public class EvaluacijaZahtjevaService {
             TipDokumenta.DOKAZ_O_NEOSUDJIVANOSTI_ZA_NASILNA_KRIVICNA_DJELA, 1,
             TipDokumenta.DOKAZ_O_CLANSTVU_U_STRELJACKOM_KLUBU, 1,
             TipDokumenta.DOKAZ_O_POLOZENOJ_OBUCI_ZA_RUKOVANJE_ORUZJEM, 1,
-            TipDokumenta.DOKAZ_O_UGROZENOSTI_LICNE_BEZJEDNOSTI, 100,
+            TipDokumenta.DOKAZ_O_UGROZENOSTI_LICNE_BEZBIJEDNOSTI, 100,
             TipDokumenta.DOKAZ_O_PLACENOJ_CLANARINI_U_LOVACKOM_ILI_STRELJACKOM_KLUBU, 0,
             TipDokumenta.LICNA_KARTA, 0,
             TipDokumenta.DOKAZ_O_UPLACENIM_NEOPHODNIM_TAKSAMA, 0

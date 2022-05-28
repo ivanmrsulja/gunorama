@@ -63,7 +63,7 @@ public class DbInitializer implements ApplicationRunner {
         PotrebanUslov pu1 = new PotrebanUslov(DomenPrimjene.LOV, new ArrayList<>(Arrays.asList(TipDokumenta.DOKAZ_O_CLANSTVU_U_LOVACKOM_DRUSTVU, TipDokumenta.DOKAZ_O_POLOZENOM_LOVACKOM_ISPITU, TipDokumenta.DOKAZ_O_NEOSUDJIVANOSTI_ZA_NASILNA_KRIVICNA_DJELA)));
         PotrebanUslov pu2 = new PotrebanUslov(DomenPrimjene.LOVNO_STRELJASTVO, new ArrayList<>(Arrays.asList(TipDokumenta.DOKAZ_O_CLANSTVU_U_LOVACKOM_DRUSTVU, TipDokumenta.DOKAZ_O_POLOZENOM_LOVACKOM_ISPITU, TipDokumenta.DOKAZ_O_CLANSTVU_U_LOVACKO_STRELJACKOM_DRUSTVU, TipDokumenta.DOKAZ_O_NEOSUDJIVANOSTI_ZA_NASILNA_KRIVICNA_DJELA)));
         PotrebanUslov pu3 = new PotrebanUslov(DomenPrimjene.STRELJASTVO, new ArrayList<>(Arrays.asList(TipDokumenta.DOKAZ_O_CLANSTVU_U_STRELJACKOM_KLUBU, TipDokumenta.DOKAZ_O_POLOZENOJ_OBUCI_ZA_RUKOVANJE_ORUZJEM, TipDokumenta.DOKAZ_O_NEOSUDJIVANOSTI_ZA_NASILNA_KRIVICNA_DJELA)));
-        PotrebanUslov pu4 = new PotrebanUslov(DomenPrimjene.SAMOODBRANA, new ArrayList<>(Arrays.asList(TipDokumenta.DOKAZ_O_UGROZENOSTI_LICNE_BEZJEDNOSTI, TipDokumenta.DOKAZ_O_NEOSUDJIVANOSTI_ZA_NASILNA_KRIVICNA_DJELA)));
+        PotrebanUslov pu4 = new PotrebanUslov(DomenPrimjene.SAMOODBRANA, new ArrayList<>(Arrays.asList(TipDokumenta.DOKAZ_O_UGROZENOSTI_LICNE_BEZBIJEDNOSTI, TipDokumenta.DOKAZ_O_NEOSUDJIVANOSTI_ZA_NASILNA_KRIVICNA_DJELA)));
 
         potrebanUslovRepository.saveAll(Arrays.asList(pu1, pu2, pu3, pu4));
 
