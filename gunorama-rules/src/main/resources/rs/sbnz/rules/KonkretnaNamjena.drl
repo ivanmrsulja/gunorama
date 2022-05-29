@@ -6,29 +6,6 @@ import rs.sbnz.gunorama.model.*;
 import rs.sbnz.gunorama.model.facts.*;
 import rs.sbnz.gunorama.model.faze.*;
 
-//TODO: dodaj salience za ova pravila
-
-// rule "Odredivanje konkretne namjene - opsto"
-//   agenda-group "Konkretna namjena"
-// 	no-loop true
-//   salience -1
-//   when
-//     $z: Zahtjev($id: id, $domenPrimjene: domenPrimjene, odobren == true) and 
-//     $konkretnaNamjenaFaza: KonkretnaNamjenaFaza(zahtjevId == $id, $sveKonkretneNamjene: konkretneNamjene) and
-//     $dozvoljeneKonkretneNamjene: List() from accumulate ( 
-//             $kn: KonkretnaNamjena(this memberOf $domenPrimjene.dozvoljeneKonkretneNamjene) from $sveKonkretneNamjene;
-//             collectList($kn)
-//         )
-//     not (KonkretnaNamjenaFact(zahtjevId == $id))
-//     then
-//       modify($z) {
-//         setKonkretnaNamjena(KonkretnaNamjena.LOV_KRUPNE_DIVLJACI);
-//       }
-//       insert(new KonkretnaNamjenaFact($id, KonkretnaNamjena.LOV_KRUPNE_DIVLJACI ));
-//       System.out.println("\n=======\nUPAO SAM U PRAVILO ZA KONKRETNU NAMJENU - ONO OPSTE");
-//       System.out.println($dozvoljeneKonkretneNamjene);
-// end 
-
 
 
 rule "Odredjivanje konkretne namjene - lov krupne divljaci"
@@ -168,6 +145,7 @@ end
 rule "Nepostojanje konkretne namjene"
   agenda-group "Konkretna namjena"
 	no-loop true
+  salience -1
   when
     $z: Zahtjev($id: id, $domenPrimjene: domenPrimjene, odobren == true) and 
     $konkretnaNamjenaFaza: KonkretnaNamjenaFaza(zahtjevId == $id, tezinaDivljaci == null, daljinaMete == null, skitIzabran == null, trapIzabran == null, nosenjeIzabrano == null, posjedovanjeIzabrano == null)

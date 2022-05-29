@@ -5,6 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import rs.sbnz.gunorama.model.enums.MehanizamHranjenja;
+import rs.sbnz.gunorama.model.enums.MehanizamOkidanja;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,4 +29,11 @@ public class KorisnickiUpitnik {
     private Boolean nosenjeIzabrano;
 
     private Boolean posjedovanjeIzabrano;
+
+    private List<MehanizamHranjenja> mehanizmiHranjenja;
+
+    private List<MehanizamOkidanja> mehanizmiOkidanja;
+
+    private List<Integer> kalibri; //id-ijevi zeljenih kalibara
+
 }

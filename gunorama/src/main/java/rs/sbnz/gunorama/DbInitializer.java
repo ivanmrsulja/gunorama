@@ -86,7 +86,5 @@ public class DbInitializer implements ApplicationRunner {
         zahtjevRepository.saveAll(Arrays.asList(z1, z2, z3, z4));
 
 
-
-
     }
 }

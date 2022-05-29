@@ -15,7 +15,7 @@ import java.util.Set;
 @Table(name = "oruzje")
 public class Oruzje extends BaseEntity {
 
-    @Column(name = "naziv", nullable = false)
+    @Column(name = "naziv", nullable = false, unique = true)
     private String naziv;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -27,8 +27,10 @@ public class Oruzje extends BaseEntity {
     @Column(name = "mehanizam_okidanja", nullable = false)
     private MehanizamOkidanja mehanizamOkidanja;
 
+
     public Oruzje() {
     }
+
 
     public Oruzje(String naziv, Set<Kalibar> dozvoljeniKalibri, MehanizamHranjenja mehanizamHranjenja, MehanizamOkidanja mehanizamOkidanja) {
         this.naziv = naziv;
@@ -43,5 +45,14 @@ public class Oruzje extends BaseEntity {
         this.dozvoljeniKalibri = dozvoljeniKalibri;
         this.mehanizamHranjenja = mehanizamHranjenja;
         this.mehanizamOkidanja = mehanizamOkidanja;
+    }
+
+    @Override
+    public String toString() {
+        return "Oruzje{" +
+                "naziv='" + naziv + '\'' +
+                ", mehanizamHranjenja=" + mehanizamHranjenja +
+                ", mehanizamOkidanja=" + mehanizamOkidanja +
+                '}';
     }
 }

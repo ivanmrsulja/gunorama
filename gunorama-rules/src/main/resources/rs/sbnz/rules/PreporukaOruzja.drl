@@ -1,0 +1,81 @@
+package rs.sbnz.rules;
+
+
+import rs.sbnz.gunorama.model.enums.*;
+import rs.sbnz.gunorama.model.*;
+import rs.sbnz.gunorama.model.facts.*;
+import rs.sbnz.gunorama.model.faze.*;
+
+import java.util.*;
+
+
+
+rule "Preporuka oruzja - uspjesna"
+  agenda-group "Preporuka oruzja"
+	no-loop true
+  salience 1
+  when
+    $zahtjev: Zahtjev($id: id, $konkretnaNamjena: konkretnaNamjena, odobren == true) and
+    $dozvoljeniKalibriFact: DozvoljeniKalibriFact(zahtjevId == $id, $dozvoljeniKalibri: dozvoljeniKalibri) and
+    $licnePreferenceFaza: LicnePreferenceFaza(
+      $odabraniMehanizmiHranjenja: mehanizmiHranjenja, 
+      $odabraniMehanizmiOkidanja: mehanizmiOkidanja, 
+      $odabraniKalibri: kalibri)
+    Number(intValue >= 1) from accumulate (
+      $o: Oruzje(
+            Collections.disjoint(dozvoljeniKalibri, $dozvoljeniKalibri) == false, //provjeravam da li u kalibrima datog oruzja ima neki iz liste dozvoljenih
+            Collections.disjoint(dozvoljeniKalibri, $odabraniKalibri) == false,
+            mehanizamHranjenja memberOf $odabraniMehanizmiHranjenja, 
+            mehanizamOkidanja memberOf $odabraniMehanizmiOkidanja);
+            count($o)
+    )
+    $filtriranaOruzja: List() from accumulate ( 
+            $o: Oruzje(
+            Collections.disjoint(dozvoljeniKalibri, $dozvoljeniKalibri) == false,
+            Collections.disjoint(dozvoljeniKalibri, $odabraniKalibri) == false,
+            mehanizamHranjenja memberOf $odabraniMehanizmiHranjenja, 
+            mehanizamOkidanja memberOf $odabraniMehanizmiOkidanja);
+            collectList($o)
+        )
+    $dozvoljeniKalibriSet: Set() from accumulate(
+       $k: Kalibar() from $dozvoljeniKalibri;
+       collectSet($k)  
+    )
+    not (PreporucenoOruzjeFact(zahtjevId == $id))
+
+    then
+      System.out.println("UPAO U PRAVILO ZA PREPORUKU USPJESNO");
+      System.out.println($filtriranaOruzja);
+      insert(new PreporucenoOruzjeFact($id, $filtriranaOruzja, $dozvoljeniKalibriSet, $konkretnaNamjena));
+end 
+
+
+rule "Preporuka oruzja - neuspjesna"
+  agenda-group "Preporuka oruzja"
+	no-loop true
+  salience -1
+  when
+    $zahtjev: Zahtjev($id: id, $konkretnaNamjena: konkretnaNamjena, odobren == true) and
+    $dozvoljeniKalibriFact: DozvoljeniKalibriFact(zahtjevId == $id, $dozvoljeniKalibri: dozvoljeniKalibri) and
+    $licnePreferenceFaza: LicnePreferenceFaza(
+      $odabraniMehanizmiHranjenja: mehanizmiHranjenja, 
+      $odabraniMehanizmiOkidanja: mehanizmiOkidanja, 
+      $odabraniKalibri: kalibri)
+    Number(intValue == 0) from accumulate (
+      $o: Oruzje(
+            Collections.disjoint(dozvoljeniKalibri, $dozvoljeniKalibri) == false, //provjeravam da li u kalibrima datog oruzja ima neki iz liste dozvoljenih
+            Collections.disjoint(dozvoljeniKalibri, $odabraniKalibri) == false,
+            mehanizamHranjenja memberOf $odabraniMehanizmiHranjenja, 
+            mehanizamOkidanja memberOf $odabraniMehanizmiOkidanja);
+            count($o)
+    )
+    $dozvoljeniKalibriSet: Set() from accumulate(
+       $k: Kalibar() from $dozvoljeniKalibri;
+       collectSet($k)  
+    )
+    not (PreporucenoOruzjeFact(zahtjevId == $id))
+
+    then
+      System.out.println("UPAO U PRAVILO ZA PREPORUKU NEUSPJESNO");
+      insert(new PreporucenoOruzjeFact($id, new ArrayList<Oruzje>(), $dozvoljeniKalibriSet, $konkretnaNamjena));
+end 
