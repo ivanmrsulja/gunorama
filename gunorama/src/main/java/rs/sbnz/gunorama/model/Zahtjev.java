@@ -16,7 +16,7 @@ import java.util.List;
 @Table(name = "zahtjevi")
 public class Zahtjev extends BaseEntity {
 
-
+    //TODO: mozda dodati polje obradjen, pa kad se odbije ili prihvati da se to stavi na true
     @ManyToOne(fetch = FetchType.EAGER)
     private Korisnik korisnik;
 
