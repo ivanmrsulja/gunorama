@@ -1,0 +1,41 @@
+package rs.sbnz.rules;
+
+import java.util.Set;
+
+import rs.sbnz.gunorama.model.Zahtjev;
+import rs.sbnz.gunorama.model.enums.TipDokumenta;
+import rs.sbnz.gunorama.model.events.Prekrsaj;
+import rs.sbnz.gunorama.model.events.DetektovanaNepravilnost;
+
+rule "Detektovana Nepravilnost - falsifikovan lovacki ispit"
+    no-loop true
+    when
+        $eventZahtjevNovi: Zahtjev($korisnik: korisnik, $domenPrimjene: domenPrimjene, TipDokumenta.DOKAZ_O_POLOZENOM_LOVACKOM_ISPITU memberOf dokumenti)
+        $kontradiktorniZahtjevi: Set() from accumulate(
+            $eventZahtjevStari: Zahtjev(
+                this != $eventZahtjevNovi,
+                odobren == false,
+                korisnik.getJmbg() == $korisnik.getJmbg(),
+                this before[1s, 15d] $eventZahtjevNovi,
+                !dokumenti.contains(TipDokumenta.DOKAZ_O_POLOZENOM_LOVACKOM_ISPITU)
+            ),
+            collectSet($eventZahtjevStari)
+        )
+        eval($kontradiktorniZahtjevi.size() > 0)
+        not(
+            DetektovanaNepravilnost(zahtjevId == $eventZahtjevNovi.getId())
+        )
+    then
+        System.out.println("DETEKTOVANA NEPRAVILNOST ZA ZAHTJEV " + $eventZahtjevNovi.getId() + " NA OSNOVU " + $kontradiktorniZahtjevi.size() + " STARA ZAHTJEVA");
+        insert(new DetektovanaNepravilnost($korisnik.getId(), $eventZahtjevNovi.getId()));
+end
+
+rule "Gradjanin Pocinio Prekrsaj"
+    no-loop true
+    when
+        $z: Zahtjev($korisnik: korisnik, $domenPrimjene: domenPrimjene)
+        $gpp: Prekrsaj($jmbg: jmbg, $jmbg == $korisnik.getJmbg())
+    then
+        System.out.println("USAO U DETEKCIJU PREKRSAJA");
+        System.out.println($korisnik.getEmail() + " " + $domenPrimjene);
+end

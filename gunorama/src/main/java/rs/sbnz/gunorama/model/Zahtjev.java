@@ -2,6 +2,7 @@ package rs.sbnz.gunorama.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.kie.api.definition.type.Role;
 import rs.sbnz.gunorama.model.enums.DomenPrimjene;
 import rs.sbnz.gunorama.model.enums.KonkretnaNamjena;
 import rs.sbnz.gunorama.model.enums.TipDokumenta;
@@ -13,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@Role(Role.Type.EVENT)
 @Table(name = "zahtjevi")
 public class Zahtjev extends BaseEntity {
 

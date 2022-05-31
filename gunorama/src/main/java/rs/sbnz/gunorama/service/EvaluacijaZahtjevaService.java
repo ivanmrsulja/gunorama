@@ -1,6 +1,5 @@
 package rs.sbnz.gunorama.service;
 
-import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.FactHandle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ import java.util.*;
 @Service
 public class EvaluacijaZahtjevaService {
 
-    private final KieContainer kieContainer;
+    private final KieSession kieSession;
 
     private final PotrebanUslovRepository potrebanUslovRepository;
 
@@ -47,11 +46,11 @@ public class EvaluacijaZahtjevaService {
             ));
 
     @Autowired
-    public EvaluacijaZahtjevaService(KieContainer kieContainer,
+    public EvaluacijaZahtjevaService(KieSession kieSession,
                                      PotrebanUslovRepository potrebanUslovRepository,
                                      ZahtjevRepository zahtjevRepository,
                                      KorisnikRepository korisnikRepository) {
-        this.kieContainer = kieContainer;
+        this.kieSession = kieSession;
         this.potrebanUslovRepository = potrebanUslovRepository;
         this.zahtjevRepository = zahtjevRepository;
         this.korisnikRepository = korisnikRepository;
@@ -64,14 +63,13 @@ public class EvaluacijaZahtjevaService {
 
         Korisnik k;
         Optional<Korisnik> optionalKorisnik = korisnikRepository.findOneByEmail(questionnaire.getEmailKorisnika());
-        k = optionalKorisnik.orElseGet(() -> new Korisnik(questionnaire.getEmailKorisnika(), String.valueOf(PasswordGenerator.generatePassword(12))));
+        k = optionalKorisnik.orElseGet(() -> new Korisnik(questionnaire.getEmailKorisnika(), String.valueOf(PasswordGenerator.generatePassword(12)), questionnaire.getJmbgKorisnika()));
         korisnikRepository.save(k);
 
         zahtjev.setKorisnik(k);
 
         ZdravstvenoSposobanFaza faza1 = new ZdravstvenoSposobanFaza(zahtjev.getId(), questionnaire.getDioptrija(), questionnaire.isProsaoPsiholoskuEvaluaciju(), questionnaire.isProsaoPsihijatrijskuEvaluaciju());
 
-        KieSession kieSession = kieContainer.newKieSession();
         kieSession.insert(zahtjev);
         FactHandle faza1FactHandle = kieSession.insert(faza1);
         kieSession.getAgenda().getAgendaGroup("Zdravstvena evaluacija").setFocus();
@@ -95,8 +93,6 @@ public class EvaluacijaZahtjevaService {
         kieSession.insert(new SpecificniZahtjeviFaza(dokumenta, zahtjev.getId()));
         kieSession.getAgenda().getAgendaGroup("Specificni zahtjevi za domen primjene").setFocus();
         kieSession.fireAllRules();
-
-        kieSession.dispose();
 
         return zahtjev;
     }

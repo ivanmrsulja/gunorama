@@ -1,13 +1,10 @@
 package rs.sbnz.gunorama.service;
 
 
-import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.drools.core.ClassObjectFilter;
-import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.FactHandle;
-import org.mvel2.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.sbnz.gunorama.dto.KorisnickiUpitnik;
@@ -22,9 +19,7 @@ import rs.sbnz.gunorama.repository.KalibarRepository;
 import rs.sbnz.gunorama.repository.OruzjeRepository;
 import rs.sbnz.gunorama.repository.ZahtjevRepository;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +27,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class EvaluacijaUpitnikaService {
 
-    private final KieContainer kieContainer;
+    private final KieSession kieSession;
 
     private final ZahtjevRepository zahtjevRepository;
 
@@ -41,8 +36,8 @@ public class EvaluacijaUpitnikaService {
     private final OruzjeRepository oruzjeRepository;
 
     @Autowired
-    public EvaluacijaUpitnikaService(KieContainer kieContainer, ZahtjevRepository zahtjevRepository, KalibarRepository kalibarRepository, OruzjeRepository oruzjeRepository) {
-        this.kieContainer = kieContainer;
+    public EvaluacijaUpitnikaService(KieSession kieSession, ZahtjevRepository zahtjevRepository, KalibarRepository kalibarRepository, OruzjeRepository oruzjeRepository) {
+        this.kieSession = kieSession;
         this.zahtjevRepository = zahtjevRepository;
         this.kalibarRepository = kalibarRepository;
         this.oruzjeRepository = oruzjeRepository;
@@ -63,8 +58,6 @@ public class EvaluacijaUpitnikaService {
                 korisnickiUpitnik.getNosenjeIzabrano(),
                 korisnickiUpitnik.getPosjedovanjeIzabrano()
         );
-
-        KieSession kieSession = kieContainer.newKieSession();
 
         kieSession.insert(zahtjev);
 
@@ -113,7 +106,7 @@ public class EvaluacijaUpitnikaService {
 
 
         Collection<KonkretnaNamjenaFact> myFacts = (Collection<KonkretnaNamjenaFact>) kieSession.getObjects(new ClassObjectFilter(KonkretnaNamjenaFact.class));
-        kieSession.dispose();
+
         return myFacts.stream().filter(fact -> fact.getZahtjevId().equals(zahtjev.getId())).collect(Collectors.toList()).get(0);
     }
 }

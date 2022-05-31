@@ -19,11 +19,15 @@ public class Korisnik extends BaseEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "jmbg", nullable = false)
+    private String jmbg;
+
     public Korisnik() {}
 
-    public Korisnik(String email, String password) {
+    public Korisnik(String email, String password, String jmbg) {
         super();
         this.email = email;
         this.password = password;
+        this.jmbg = jmbg;
     }
 }

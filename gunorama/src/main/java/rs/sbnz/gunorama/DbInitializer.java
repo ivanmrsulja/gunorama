@@ -1,17 +1,12 @@
 package rs.sbnz.gunorama;
 
+import org.kie.api.runtime.KieSession;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-import rs.sbnz.gunorama.model.Kalibar;
-import rs.sbnz.gunorama.model.Oruzje;
-import rs.sbnz.gunorama.model.PotrebanUslov;
-import rs.sbnz.gunorama.model.Zahtjev;
+import rs.sbnz.gunorama.model.*;
 import rs.sbnz.gunorama.model.enums.*;
-import rs.sbnz.gunorama.repository.KalibarRepository;
-import rs.sbnz.gunorama.repository.OruzjeRepository;
-import rs.sbnz.gunorama.repository.PotrebanUslovRepository;
-import rs.sbnz.gunorama.repository.ZahtjevRepository;
+import rs.sbnz.gunorama.repository.*;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -29,13 +24,22 @@ public class DbInitializer implements ApplicationRunner {
 
     private final ZahtjevRepository zahtjevRepository;
 
+    private final KorisnikRepository korisnikRepository;
+
+    private final KieSession kieSession;
+
     public DbInitializer(KalibarRepository kalibarRepository,
                          OruzjeRepository oruzjeRepository,
-                         PotrebanUslovRepository potrebanUslovRepository, ZahtjevRepository zahtjevRepository) {
+                         PotrebanUslovRepository potrebanUslovRepository,
+                         ZahtjevRepository zahtjevRepository,
+                         KorisnikRepository korisnikRepository,
+                         KieSession kieSession) {
         this.kalibarRepository = kalibarRepository;
         this.oruzjeRepository = oruzjeRepository;
         this.potrebanUslovRepository = potrebanUslovRepository;
         this.zahtjevRepository = zahtjevRepository;
+        this.korisnikRepository = korisnikRepository;
+        this.kieSession = kieSession;
     }
 
     @Override
@@ -67,24 +71,46 @@ public class DbInitializer implements ApplicationRunner {
 
         potrebanUslovRepository.saveAll(Arrays.asList(pu1, pu2, pu3, pu4));
 
+        Korisnik korisnik1 = new Korisnik("email@email.com", "password", "1231231231231");
+        Korisnik korisnik2 = new Korisnik("email2@email.com", "password", "1111111111111");
+        Korisnik korisnik3 = new Korisnik("email3@email.com", "password", "2222222222222");
+        korisnikRepository.save(korisnik1);
+        korisnikRepository.save(korisnik2);
+        korisnikRepository.save(korisnik3);
+
         Zahtjev z1 = new Zahtjev();
         z1.setOdobren(true);
         z1.setDomenPrimjene(DomenPrimjene.LOVNO_STRELJASTVO);
+        z1.setKorisnik(korisnik1);
+
+        Zahtjev zOdbijen = new Zahtjev();
+        zOdbijen.setOdobren(false);
+        zOdbijen.setRazlogOdbijanja("Gradjanin je podnio nepotpunu dokumentaciju.");
+        zOdbijen.setDomenPrimjene(null);
+        zOdbijen.setDokumenti(new ArrayList<>(Arrays.asList(TipDokumenta.DOKAZ_O_CLANSTVU_U_LOVACKOM_DRUSTVU, TipDokumenta.DOKAZ_O_NEOSUDJIVANOSTI_ZA_NASILNA_KRIVICNA_DJELA))); // Fali mu TipDokumenta.DOKAZ_O_POLOZENOM_LOVACKOM_ISPITU
+        zOdbijen.setKorisnik(korisnik1);
 
         Zahtjev z2 = new Zahtjev();
         z2.setOdobren(true);
         z2.setDomenPrimjene(DomenPrimjene.LOV);
+        z2.setKorisnik(korisnik1);
 
         Zahtjev z3 = new Zahtjev();
         z3.setOdobren(true);
         z3.setDomenPrimjene(DomenPrimjene.STRELJASTVO);
+        z3.setKorisnik(korisnik2);
 
         Zahtjev z4 = new Zahtjev();
         z4.setOdobren(true);
         z4.setDomenPrimjene(DomenPrimjene.SAMOODBRANA);
+        z4.setKorisnik(korisnik3);
 
-        zahtjevRepository.saveAll(Arrays.asList(z1, z2, z3, z4));
+        zahtjevRepository.saveAll(Arrays.asList(z1, zOdbijen, z2, z3, z4));
 
-
+        kieSession.insert(z1);
+        kieSession.insert(zOdbijen);
+        kieSession.insert(z2);
+        kieSession.insert(z3);
+        kieSession.insert(z4);
     }
 }
