@@ -8,6 +8,5 @@ import java.util.Optional;
 
 public interface KorisnikRepository extends JpaRepository<Korisnik, Integer> {
 
-    @Query("select k from Korisnik k where k.email = :email")
-    Optional<Korisnik> findOneByEmail(String email);
+    Optional<Korisnik> findByEmail(String email);
 }

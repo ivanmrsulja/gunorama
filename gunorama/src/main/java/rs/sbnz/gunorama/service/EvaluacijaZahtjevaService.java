@@ -62,7 +62,7 @@ public class EvaluacijaZahtjevaService {
         zahtjev = zahtjevRepository.getById(zahtjev.getId());
 
         Korisnik k;
-        Optional<Korisnik> optionalKorisnik = korisnikRepository.findOneByEmail(questionnaire.getEmailKorisnika());
+        Optional<Korisnik> optionalKorisnik = korisnikRepository.findByEmail(questionnaire.getEmailKorisnika());
         k = optionalKorisnik.orElseGet(() -> new Korisnik(questionnaire.getEmailKorisnika(), String.valueOf(PasswordGenerator.generatePassword(12)), questionnaire.getJmbgKorisnika()));
         korisnikRepository.save(k);
 
