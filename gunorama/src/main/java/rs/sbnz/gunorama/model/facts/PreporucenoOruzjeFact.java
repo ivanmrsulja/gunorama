@@ -25,4 +25,33 @@ public class PreporucenoOruzjeFact extends Fact{
         this.dozvoljeniKalibri = dozvoljeniKalibri;
         this.konkretnaNamjena = konkretnaNamjena;
     }
+
+    public PreporucenoOruzjeFact(Integer zahtjevId) {
+        super(zahtjevId);
+    }
+
+//    @Override
+//    public boolean equals(Object o) {
+//        if(o == null)
+//            return false;
+//        if(o.getClass() != this.getClass())
+//            return false;
+//        PreporucenoOruzjeFact preporucenoOruzjeFact = (PreporucenoOruzjeFact) o;
+//        return preporucenoOruzjeFact.getZahtjevId().equals(this.getZahtjevId());
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(zahtjevId);
+//    }
+
+    @Override
+    public String toString() {
+        return "PreporucenoOruzjeFact{" +
+                "zahtjevId=" + zahtjevId +
+                ", preporucenoOruzje=" + preporucenoOruzje +
+                ", dozvoljeniKalibri=" + dozvoljeniKalibri +
+                ", konkretnaNamjena=" + konkretnaNamjena +
+                '}';
+    }
 }

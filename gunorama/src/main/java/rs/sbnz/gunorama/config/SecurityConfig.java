@@ -66,6 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/korisnici/{id}/odobreni-zahtjevi").hasAuthority(dobavljanjeZahtjevaZaKorisnika)
                 .antMatchers(HttpMethod.GET, "/api/korisnici/{korisnikId}/odobreni-zahtjevi/{zahtjevId}").hasAuthority(dobavljanjeZahtjevaZaKorisnika)
                 .antMatchers(HttpMethod.POST, "/api/korisnicki-upitnik").hasAuthority(popunjavanjeUpitnika)
+                .antMatchers(HttpMethod.GET, "/api/kalibri").permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtFilter,

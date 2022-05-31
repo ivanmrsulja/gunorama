@@ -141,5 +141,14 @@ public class DbInitializer implements ApplicationRunner {
         kieSession.insert(z2);
         kieSession.insert(z3);
         kieSession.insert(z4);
+//
+//
+//        kieSession.insert(o1);
+//        kieSession.insert(o2);
+//        kieSession.insert(o3);
+//        kieSession.insert(o4);
+//        kieSession.insert(o5);
+//        kieSession.insert(o6);
+
     }
 }

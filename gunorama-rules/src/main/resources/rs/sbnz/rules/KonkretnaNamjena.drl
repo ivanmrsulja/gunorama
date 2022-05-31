@@ -11,6 +11,7 @@ import rs.sbnz.gunorama.model.faze.*;
 rule "Odredjivanje konkretne namjene - lov krupne divljaci"
   agenda-group "Konkretna namjena"
 	no-loop true
+  salience 1
   when
     $z: Zahtjev($id: id, $domenPrimjene: domenPrimjene, domenPrimjene == DomenPrimjene.LOV, odobren == true) and 
     $konkretnaNamjenaFaza: KonkretnaNamjenaFaza(zahtjevId == $id, tezinaDivljaci >= 70)
@@ -27,6 +28,7 @@ end
 rule "Odredjivanje konkretne namjene - lov sitne divljaci"
   agenda-group "Konkretna namjena"
 	no-loop true
+  salience 1
   when
     $z: Zahtjev($id: id, $domenPrimjene: domenPrimjene, domenPrimjene == DomenPrimjene.LOV, odobren == true) and 
     $konkretnaNamjenaFaza: KonkretnaNamjenaFaza(zahtjevId == $id, tezinaDivljaci < 70)
@@ -43,6 +45,7 @@ end
 rule "Odredjivanje konkretne namjene - skit"
   agenda-group "Konkretna namjena"
 	no-loop true
+  salience 2
   when
     $z: Zahtjev($id: id, $domenPrimjene: domenPrimjene, domenPrimjene == DomenPrimjene.LOVNO_STRELJASTVO, odobren == true) and 
     $konkretnaNamjenaFaza: KonkretnaNamjenaFaza(zahtjevId == $id, skitIzabran == true)
@@ -60,6 +63,7 @@ end
 rule "Odredjivanje konkretne namjene - trap"
   agenda-group "Konkretna namjena"
 	no-loop true
+  salience 2
   when
     $z: Zahtjev($id: id, $domenPrimjene: domenPrimjene, domenPrimjene == DomenPrimjene.LOVNO_STRELJASTVO, odobren == true) and 
     $konkretnaNamjenaFaza: KonkretnaNamjenaFaza(zahtjevId == $id, trapIzabran == true)
@@ -77,6 +81,7 @@ end
 rule "Odredjivanje konkretne namjene - dalekometno gadjanje"
   agenda-group "Konkretna namjena"
 	no-loop true
+  salience 3
   when
     $z: Zahtjev($id: id, $domenPrimjene: domenPrimjene, domenPrimjene == DomenPrimjene.STRELJASTVO, odobren == true) and 
     $konkretnaNamjenaFaza: KonkretnaNamjenaFaza(zahtjevId == $id, daljinaMete >= 50)
@@ -93,6 +98,7 @@ end
 
 rule "Odredjivanje konkretne namjene - kratkometno gadjanje"
   agenda-group "Konkretna namjena"
+  salience 3
 	no-loop true
   when
     $z: Zahtjev($id: id, $domenPrimjene: domenPrimjene, domenPrimjene == DomenPrimjene.STRELJASTVO, odobren == true) and 
@@ -110,6 +116,7 @@ end
 
 rule "Odredjivanje konkretne namjene - nosenje"
   agenda-group "Konkretna namjena"
+  salience 5
 	no-loop true
   when
     $z: Zahtjev($id: id, $domenPrimjene: domenPrimjene, domenPrimjene == DomenPrimjene.SAMOODBRANA, odobren == true) and 
@@ -128,6 +135,7 @@ end
 rule "Odredjivanje konkretne namjene - posjedovanje"
   agenda-group "Konkretna namjena"
 	no-loop true
+  salience 4
   when
     $z: Zahtjev($id: id, $domenPrimjene: domenPrimjene, domenPrimjene == DomenPrimjene.SAMOODBRANA, odobren == true) and 
     $konkretnaNamjenaFaza: KonkretnaNamjenaFaza(zahtjevId == $id, posjedovanjeIzabrano == true)

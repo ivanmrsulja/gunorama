@@ -56,8 +56,8 @@
                     chips
                     label="Kalibri"
                     :items="dostupniKalibri"
-                    item-text="text"
-                    item-value="value"
+                    item-text="naziv"
+                    item-value="id"
                     multiple
                     v-model="kalibri"
                   />
@@ -66,13 +66,13 @@
             </div>
 
             <!--TODO: dodaj neki v-show, na osnovu domena primjene iz zahtjeva prikazuj i skrivaj ove div-ove -->
-            <div>
-              <v-row align="center" justify="center">
-                <v-col>
-                  <h3 class="subheader">Domeni primjene i konkretne namjene</h3>
-                </v-col>
-              </v-row>
+            <v-row align="center" justify="center">
+              <v-col>
+                <h3 class="subheader">Domeni primjene i konkretne namjene</h3>
+              </v-col>
+            </v-row>
 
+            <div v-if="zahtjev.domenPrimjene === 'LOV'">
               <v-row align="center" justify="center">
                 <v-col>
                   <h4 class="subheader">Lov</h4>
@@ -90,7 +90,7 @@
               </v-row>
             </div>
 
-            <div>
+            <div v-else-if="zahtjev.domenPrimjene === 'STRELJASTVO'">
               <v-row align="center" justify="center">
                 <v-col>
                   <h4 class="subheader">Streljaštvo</h4>
@@ -108,7 +108,7 @@
               </v-row>
             </div>
 
-            <div>
+            <div v-else-if="zahtjev.domenPrimjene === 'LOVNO_STRELJASTVO'">
               <v-row align="center" justify="center">
                 <v-col>
                   <h4 class="subheader">Lovno streljaštvo</h4>
@@ -124,7 +124,7 @@
               </v-row>
             </div>
 
-            <div>
+            <div v-else>
               <v-row align="center" justify="center">
                 <v-col>
                   <h4 class="subheader">Samoodbrana</h4>
@@ -170,6 +170,11 @@
 </template>
 
 <script>
+import { korisnikService } from "../service/korisnikService";
+import { authService } from "../service/authService";
+import { kalibarService } from "../service/kalibarService";
+import { questionnaireService } from "../service/questionnaireService";
+
 export default {
   name: "CitizenQuestionnaire",
   data: () => {
@@ -207,7 +212,6 @@ export default {
           value: "ZATVORENI",
         },
       ],
-      zahtjevId: 1, //TODO: ovo dobavi iz url,
       tezinaDivljaci: null,
       daljinaMete: null,
       skitTrap: "-1",
@@ -215,16 +219,28 @@ export default {
       mehanizmiHranjenja: [],
       mehanizmiOkidanja: [],
       kalibri: [],
+      zahtjev: {},
     };
   },
   mounted() {
-    //TODO: dobavi kalibre
-    //TODO: dobavi id zahtjeva iz url-a, pa dobavi zahtjev
+    kalibarService.getAll().then((response) => {
+      this.dostupniKalibri = response.data;
+    });
+
+    korisnikService
+      .getApprovedRequestForUser(
+        authService.userId(),
+        this.$route.params.id_zahtjeva
+      )
+      .then((response) => {
+        this.zahtjev = response.data;
+      });
   },
   methods: {
     fileQuestionnaire() {
+      this.btnLoading = true;
       let payload = {};
-      payload["zahtjevId"] = this.zahtjevId;
+      payload["zahtjevId"] = this.$route.params.id_zahtjeva;
       if (this.skitTrap === "1") payload["skitIzabran"] = true;
       else if (this.skitTrap === "2") payload["trapIzabran"] = true;
 
@@ -241,7 +257,19 @@ export default {
       payload["mehanizmiHranjenja"] = this.mehanizmiHranjenja;
       payload["kalibri"] = this.kalibri;
 
-      console.log(payload);
+      //console.log(payload);
+      questionnaireService
+        .fileQuestionnaire(payload)
+        .then((response) => {
+          this.btnLoading = false;
+          console.log(response);
+        })
+        .catch((error) => {
+          this.btnLoading = false;
+          this.snackbar = true;
+          if (error.response) this.text = error.response.data.message;
+          else this.text = "Desila se greška.";
+        });
     },
   },
 };

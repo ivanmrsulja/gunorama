@@ -2,24 +2,48 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 Vue.use(VueRouter);
-//TODO: dodati komponente da se prikazu adminu svi pristigli zahtjevi i korisniku svi njegovi zahtjevi
+const roles = {
+  policijskiSluzbenik: "POLICIJSKI_SLUZBENIK",
+  gradjanin: "GRADJANIN",
+};
 
 const routes = [
   {
     path: "/",
     name: "Home",
     component: () => import("../views/HomeView.vue"),
+    meta: {
+      authenticated: false,
+      authorities: [],
+    },
   },
   {
     path: "/prijava",
     name: "Login",
     component: () => import("../views/LoginView.vue"),
+    meta: {
+      authenticated: false,
+      authorities: [],
+    },
   },
   {
     //TODO: dodati id zahtjeva za koji se popunjava upitnik
-    path: "/upitnik-gradjanina",
+    path: "/:id_zahtjeva/upitnik-gradjanina",
     name: "CitizenQuestionnaireView",
     component: () => import("../views/CitizenQuestionnaireView.vue"),
+    meta: {
+      authenticated: true,
+      authorities: [roles.gradjanin],
+    },
+  },
+  {
+    path: "/odobreni-zahtjevi",
+    name: "ApprovedRequestsView",
+    component: () => import("../views/ApprovedRequestsView.vue"),
+    meta: {
+      authenticated: true,
+      authorities: [roles.gradjanin],
+    },
   },
 ];
 

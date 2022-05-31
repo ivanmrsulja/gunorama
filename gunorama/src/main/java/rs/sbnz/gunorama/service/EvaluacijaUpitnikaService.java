@@ -14,6 +14,7 @@ import rs.sbnz.gunorama.model.Oruzje;
 import rs.sbnz.gunorama.model.Zahtjev;
 import rs.sbnz.gunorama.model.facts.DozvoljeniKalibriFact;
 import rs.sbnz.gunorama.model.facts.KonkretnaNamjenaFact;
+import rs.sbnz.gunorama.model.facts.PreporucenoOruzjeFact;
 import rs.sbnz.gunorama.model.faze.KonkretnaNamjenaFaza;
 import rs.sbnz.gunorama.model.faze.LicnePreferenceFaza;
 import rs.sbnz.gunorama.repository.KalibarRepository;
@@ -45,7 +46,7 @@ public class EvaluacijaUpitnikaService {
     }
 
 
-    public KonkretnaNamjenaFact evaluate(KorisnickiUpitnik korisnickiUpitnik) {
+    public PreporucenoOruzjeFact evaluate(KorisnickiUpitnik korisnickiUpitnik) {
 
         Zahtjev zahtjev = this.zahtjevRepository.findById(korisnickiUpitnik.getZahtjevId())
                 .orElseThrow(() -> new NotFoundException(String.format("Zahtjev sa id-ijem: %d nije pronadjen.", korisnickiUpitnik.getZahtjevId())));
@@ -76,9 +77,6 @@ public class EvaluacijaUpitnikaService {
 
         DozvoljeniKalibriFact dozvoljeniKalibriFact = new DozvoljeniKalibriFact(zahtjev.getId());
         dozvoljeniKalibri.forEach(dozvoljeniKalibriFact::dodajKalibar);
-//        dozvoljeniKalibriFact.getDozvoljeniKalibri().forEach(dozvoljeniKalibar -> log.info(dozvoljeniKalibar.getNaziv()));
-        log.info("==DOZVOLJENI KALIBRI");
-        log.info(dozvoljeniKalibriFact.getDozvoljeniKalibri().toString());
 
         //ovo ostaje
         List<Kalibar> zeljeniKalibri = this.kalibarRepository.findAllById(korisnickiUpitnik.getKalibri());
@@ -88,25 +86,25 @@ public class EvaluacijaUpitnikaService {
         oruzja.forEach(kieSession::insert);
 
 
-//        for(Oruzje o: oruzja){
-//            log.info("==========");
-//            log.info(o.getNaziv());
-//            log.info("HRANJENJE: " + o.getMehanizamHranjenja());
-//            log.info("OKIDANJE: " + o.getMehanizamOkidanja());
-//            log.info("KALIBRI: " + o.getDozvoljeniKalibri());
-//            log.info("PRESJEK SA DOZVOLJENIM KALIBRIMA: " + Sets.intersection(o.getDozvoljeniKalibri(), dozvoljeniKalibriFact.getDozvoljeniKalibri()));
-//        }
-
-
         LicnePreferenceFaza licnePreferenceFaza = new LicnePreferenceFaza(zahtjev.getId(), korisnickiUpitnik.getMehanizmiHranjenja(), korisnickiUpitnik.getMehanizmiOkidanja(), zeljeniKalibri);
         FactHandle licnePreferenceFactHandle = kieSession.insert(licnePreferenceFaza);
-        kieSession.insert(dozvoljeniKalibriFact);
+        FactHandle dozvoljeniKalibriFactHandle = kieSession.insert(dozvoljeniKalibriFact);
         kieSession.getAgenda().getAgendaGroup("Preporuka oruzja").setFocus();
         kieSession.fireAllRules();
+
         kieSession.delete(licnePreferenceFactHandle);
+        kieSession.delete(dozvoljeniKalibriFactHandle);
+
+        //kieSession.getF
+        log.info("FACT HANDLES");
+        Collection<FactHandle> factHandles = kieSession.getFactHandles();
+        for(FactHandle factHandle: factHandles){
+            log.info(factHandle.toExternalForm());
+        }
 
 
-        Collection<KonkretnaNamjenaFact> myFacts = (Collection<KonkretnaNamjenaFact>) kieSession.getObjects(new ClassObjectFilter(KonkretnaNamjenaFact.class));
+
+        Collection<PreporucenoOruzjeFact> myFacts = (Collection<PreporucenoOruzjeFact>) kieSession.getObjects(new ClassObjectFilter(PreporucenoOruzjeFact.class));
 
         return myFacts.stream().filter(fact -> fact.getZahtjevId().equals(zahtjev.getId())).collect(Collectors.toList()).get(0);
     }

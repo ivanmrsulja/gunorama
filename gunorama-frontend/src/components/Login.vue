@@ -60,6 +60,9 @@
 </template>
 
 <script>
+import { authService } from "../service/authService";
+import jwtDecode from "jwt-decode";
+
 export default {
   name: "Login",
   data: () => {
@@ -76,7 +79,24 @@ export default {
     };
   },
   methods: {
-    login() {},
+    login() {
+      this.loginBtnLoading = true;
+      authService
+        .login(this.payload)
+        .then((response) => {
+          this.loginBtnLoading = false;
+          let decodedToken = jwtDecode(response.data.jwt);
+          authService.setToken(response.data.jwt);
+          this.$root.$emit("loginSuccess", decodedToken.roles);
+          this.$router.push({ name: "Home" });
+        })
+        .catch((error) => {
+          this.loginBtnLoading = false;
+          this.snackbar = true;
+          if (error.response) this.text = error.response.data.message;
+          else this.text = "Wrong username/password combination.";
+        });
+    },
   },
 };
 </script>

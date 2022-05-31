@@ -4,21 +4,48 @@
 
     <v-spacer></v-spacer>
 
-    <v-btn text @click="redirect('CitizenQuestionnaireView')">
-      Upitnik građanina
+    <v-btn
+      text
+      v-if="loggedIn === true && roles === 'GRADJANIN'"
+      @click="redirect('ApprovedRequestsView')"
+    >
+      Pregled odobrenih zahtjeva
     </v-btn>
 
-    <v-btn text @click="redirect('Login')"> Prijava </v-btn>
+    <v-btn v-if="!loggedIn" text @click="redirect('Login')"> Prijava </v-btn>
+    <v-btn v-else text @click="logout"> Odjava </v-btn>
   </v-app-bar>
 </template>
 
 <script>
+import { authService } from "../service/authService";
 export default {
   name: "Navbar",
-
+  data: () => {
+    return {
+      roles: "",
+      loggedIn: false,
+    };
+  },
+  mounted() {
+    if (authService.userLoggedIn()) {
+      this.loggedIn = true;
+      this.roles = authService.getRoles();
+    }
+    this.$root.$on("loginSuccess", (roles) => {
+      this.loggedIn = true;
+      this.roles = roles;
+    });
+  },
   methods: {
     redirect(name) {
       this.$router.push({ name }).catch((_) => {});
+    },
+    logout() {
+      authService.removeJwt();
+      this.loggedIn = false;
+      this.roles = "";
+      this.$router.push({ name: "Login" });
     },
   },
 };

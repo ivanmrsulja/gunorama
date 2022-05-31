@@ -10,6 +10,7 @@ import rs.sbnz.gunorama.model.enums.TipDokumenta;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -34,12 +35,13 @@ public class Zahtjev extends BaseEntity {
     @Column(name = "konkretna_namjena", nullable = true)
     private KonkretnaNamjena konkretnaNamjena = null;
 
-    @ElementCollection(targetClass = TipDokumenta.class)
+    @ElementCollection(targetClass = TipDokumenta.class, fetch = FetchType.EAGER)
     @Column(name = "dokumenti", nullable = false)
     @Enumerated(EnumType.STRING)
     private List<TipDokumenta> dokumenti = new ArrayList<>();
 
-    public Zahtjev() {}
+    public Zahtjev() {
+    }
 
     public Zahtjev(Korisnik korisnik, boolean odobren, String razlogOdbijanja) {
         this.korisnik = korisnik;
@@ -52,5 +54,21 @@ public class Zahtjev extends BaseEntity {
         this.korisnik = korisnik;
         this.odobren = odobren;
         this.razlogOdbijanja = razlogOdbijanja;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null)
+            return false;
+        if (o.getClass() != this.getClass())
+            return false;
+        Zahtjev zahtjev = (Zahtjev) o;
+        return this.getId().equals(zahtjev.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.getId());
     }
 }
