@@ -26,6 +26,6 @@ public class EvaluacijaZahtjevaController {
     @PostMapping
     public ZahtjevDTO evaluateQuestionnaire(@RequestBody DozvolaUpitnik questionnaire) {
         Zahtjev zahtjev = evaluacijaZahtjevaService.evaluateQuestionnaire(questionnaire);
-        return new ZahtjevDTO(new KorisnikDTO(zahtjev.getKorisnik().getEmail()), zahtjev.isOdobren(), zahtjev.getRazlogOdbijanja(), zahtjev.getDomenPrimjene(), zahtjev.getKonkretnaNamjena(), zahtjev.getDokumenti());
+        return new ZahtjevDTO(new KorisnikDTO(zahtjev.getKorisnik().getEmail(), zahtjev.getKorisnik().getJmbg(), zahtjev.getKorisnik().isPrestupnik()), zahtjev.isOdobren(), zahtjev.getRazlogOdbijanja(), zahtjev.getDomenPrimjene(), zahtjev.getKonkretnaNamjena(), zahtjev.getNepravilnost(), zahtjev.getDokumenti());
     }
 }

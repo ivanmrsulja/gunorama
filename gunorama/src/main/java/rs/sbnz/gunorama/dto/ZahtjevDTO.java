@@ -27,5 +27,7 @@ public class ZahtjevDTO {
 
     private KonkretnaNamjena konkretnaNamjena = null;
 
+    private String nepravilnost = null;
+
     private List<TipDokumenta> dokumenti = new ArrayList<>();
 }

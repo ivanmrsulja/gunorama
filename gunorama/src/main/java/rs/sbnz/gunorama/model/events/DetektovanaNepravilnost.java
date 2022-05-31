@@ -18,4 +18,6 @@ public class DetektovanaNepravilnost {
     private int korisnikId;
 
     private int zahtjevId;
+
+    private boolean obradjena;
 }

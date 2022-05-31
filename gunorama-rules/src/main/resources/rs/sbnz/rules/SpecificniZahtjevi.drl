@@ -14,7 +14,7 @@ rule "Specificni zahtjevi za domen primjene - LOV, LOVNO STRELJASTVO I STRELJAST
 	no-loop true
     salience 1
     when
-        $z: Zahtjev($id: id) and 
+        $z: Zahtjev($id: id, nepravilnost == null) and 
         $gzs: DomenPrimjeneFact(zahtjevId == $id, $domenPrimjene: domenPrimjene, $domenPrimjene == DomenPrimjene.LOV || $domenPrimjene == DomenPrimjene.LOVNO_STRELJASTVO || $domenPrimjene == DomenPrimjene.STRELJASTVO) and
         $dpf: SpecificniZahtjeviFaza(zahtjevId == $id, $dokumenti: dokumenti)
         Number(intValue >= 1) from accumulate (
@@ -33,7 +33,7 @@ rule "Specificni zahtjevi za domen primjene - SAMOODBRANA"
 	no-loop true
     salience 1
     when
-        $z: Zahtjev($id: id) and 
+        $z: Zahtjev($id: id, nepravilnost == null) and 
         $gzs: DomenPrimjeneFact(zahtjevId == $id, $domenPrimjene: domenPrimjene, $domenPrimjene == DomenPrimjene.SAMOODBRANA) and
         $dpf: SpecificniZahtjeviFaza(zahtjevId == $id, $dokumenti: dokumenti)
         Number(intValue >= 2) from accumulate (
@@ -52,7 +52,7 @@ rule "Specificni zahtjevi za domen primjene - NEPOTPUNA DOKUMENTACIJA"
 	no-loop true
     salience -1
     when
-        $z: Zahtjev($id: id, odobren == false) and 
+        $z: Zahtjev($id: id, odobren == false, nepravilnost == null) and 
         $gzs: DomenPrimjeneFact(zahtjevId == $id) and
         $dpf: SpecificniZahtjeviFaza(zahtjevId == $id, $dokumenti: dokumenti)
         $tipoviDokumenata: List() from accumulate ( 

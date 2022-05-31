@@ -24,15 +24,14 @@ public class Korisnik extends BaseEntity implements UserDetails {
     @Column(name = "jmbg", nullable = false)
     private String jmbg;
 
-
+    @Column(name = "prestupnik", nullable = false)
+    private boolean prestupnik = false;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "autoritet_id")
     private Autoritet autoritet;
 
-    public Korisnik() {
-    }
-
+    public Korisnik() {}
 
     public Korisnik(String email, String password, String jmbg) {
         super();

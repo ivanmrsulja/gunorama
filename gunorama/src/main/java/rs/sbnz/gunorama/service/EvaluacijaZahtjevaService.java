@@ -5,6 +5,7 @@ import org.kie.api.runtime.rule.FactHandle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.sbnz.gunorama.dto.DozvolaUpitnik;
+import rs.sbnz.gunorama.exception.UserIsBannedException;
 import rs.sbnz.gunorama.model.Dokument;
 import rs.sbnz.gunorama.model.Korisnik;
 import rs.sbnz.gunorama.model.PotrebanUslov;
@@ -62,15 +63,25 @@ public class EvaluacijaZahtjevaService {
         zahtjev = zahtjevRepository.getById(zahtjev.getId());
 
         Korisnik k;
-        Optional<Korisnik> optionalKorisnik = korisnikRepository.findByEmail(questionnaire.getEmailKorisnika());
-        k = optionalKorisnik.orElseGet(() -> new Korisnik(questionnaire.getEmailKorisnika(), String.valueOf(PasswordGenerator.generatePassword(12)), questionnaire.getJmbgKorisnika()));
+        Optional<Korisnik> optionalKorisnik = korisnikRepository.findOneByJmbg(questionnaire.getJmbgKorisnika());
+        if(!optionalKorisnik.isPresent()) {
+            k = new Korisnik(questionnaire.getEmailKorisnika(), String.valueOf(PasswordGenerator.generatePassword(12)), questionnaire.getJmbgKorisnika());
+        } else {
+            k = optionalKorisnik.get();
+            k.setEmail(questionnaire.getEmailKorisnika());
+        }
         korisnikRepository.save(k);
+
+        if(k.isPrestupnik()) {
+            throw new UserIsBannedException("Korisnik sa JMBG: " + k.getJmbg() + " ne moze podnositi zahtjeve.");
+        }
 
         zahtjev.setKorisnik(k);
 
         ZdravstvenoSposobanFaza faza1 = new ZdravstvenoSposobanFaza(zahtjev.getId(), questionnaire.getDioptrija(), questionnaire.isProsaoPsiholoskuEvaluaciju(), questionnaire.isProsaoPsihijatrijskuEvaluaciju());
 
         kieSession.insert(zahtjev);
+        FactHandle korisnikFactHandle = kieSession.insert(k);
         FactHandle faza1FactHandle = kieSession.insert(faza1);
         kieSession.getAgenda().getAgendaGroup("Zdravstvena evaluacija").setFocus();
         kieSession.fireAllRules();
@@ -93,6 +104,8 @@ public class EvaluacijaZahtjevaService {
         kieSession.insert(new SpecificniZahtjeviFaza(dokumenta, zahtjev.getId()));
         kieSession.getAgenda().getAgendaGroup("Specificni zahtjevi za domen primjene").setFocus();
         kieSession.fireAllRules();
+
+        kieSession.delete(korisnikFactHandle);
 
         return zahtjev;
     }

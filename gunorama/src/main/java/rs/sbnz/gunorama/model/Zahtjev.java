@@ -29,6 +29,9 @@ public class Zahtjev extends BaseEntity {
     @Column(name = "razlog_odbijanja", nullable = true)
     private String razlogOdbijanja = null;
 
+    @Column(name = "nepravilnost", nullable = true)
+    private String nepravilnost = null;
+
     @Column(name = "domen_primjene", nullable = true)
     private DomenPrimjene domenPrimjene = null;
 

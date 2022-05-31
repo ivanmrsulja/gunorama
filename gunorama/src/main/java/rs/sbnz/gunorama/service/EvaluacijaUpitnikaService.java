@@ -61,7 +61,7 @@ public class EvaluacijaUpitnikaService {
                 korisnickiUpitnik.getPosjedovanjeIzabrano()
         );
 
-        kieSession.insert(zahtjev);
+//        kieSession.insert(zahtjev);
 
         FactHandle konkretnaNamjenaFactHandle = kieSession.insert(konkretnaNamjenaFaza);
         kieSession.getAgenda().getAgendaGroup("Konkretna namjena").setFocus();

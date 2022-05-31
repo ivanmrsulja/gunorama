@@ -100,12 +100,14 @@ public class DbInitializer implements ApplicationRunner {
 
         potrebanUslovRepository.saveAll(Arrays.asList(pu1, pu2, pu3, pu4));
 
+        Korisnik policajac = new Korisnik("mrpoliceman@email.com", passwordEncoder.encode("narodniministar"), "1015454526786", policijskiSluzbenik);
         Korisnik korisnik1 = new Korisnik("email@email.com", passwordEncoder.encode("password"), "1231231231231", gradjanin);
         Korisnik korisnik2 = new Korisnik("email2@email.com", passwordEncoder.encode("password"), "1111111111111", gradjanin);
         Korisnik korisnik3 = new Korisnik("email3@email.com", passwordEncoder.encode("password"), "2222222222222", gradjanin);
         korisnikRepository.save(korisnik1);
         korisnikRepository.save(korisnik2);
         korisnikRepository.save(korisnik3);
+        korisnikRepository.save(policajac);
 
         Zahtjev z1 = new Zahtjev();
         z1.setOdobren(true);

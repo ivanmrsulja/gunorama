@@ -3,7 +3,6 @@ package rs.sbnz.gunorama.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -15,8 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import rs.sbnz.gunorama.service.KorisnikService;
 import rs.sbnz.gunorama.util.jwt.JwtFilter;
-
-import javax.servlet.http.HttpServletResponse;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true,
@@ -63,6 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
 
                 .antMatchers(HttpMethod.POST, "/api/korisnici/prijava").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/detekcija-nepravilnosti").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/korisnici/{id}/odobreni-zahtjevi").hasAuthority(dobavljanjeZahtjevaZaKorisnika)
                 .antMatchers(HttpMethod.GET, "/api/korisnici/{korisnikId}/odobreni-zahtjevi/{zahtjevId}").hasAuthority(dobavljanjeZahtjevaZaKorisnika)
                 .antMatchers(HttpMethod.POST, "/api/korisnicki-upitnik").hasAuthority(popunjavanjeUpitnika)
