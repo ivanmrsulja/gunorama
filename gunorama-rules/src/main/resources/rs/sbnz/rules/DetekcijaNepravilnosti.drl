@@ -27,15 +27,53 @@ rule "Detektovana Nepravilnost - falsifikovan lovacki ispit"
         )
     then
         System.out.println("DETEKTOVANA NEPRAVILNOST ZA ZAHTJEV " + $eventZahtjevNovi.getId() + " NA OSNOVU " + $kontradiktorniZahtjevi.size() + " STARA ZAHTJEVA");
-        insert(new DetektovanaNepravilnost($korisnik.getId(), $eventZahtjevNovi.getId()));
+        modify($eventZahtjevNovi) {
+            setOdobren(false),
+            setNepravilnost("Falsifikovan dokaz o polozenom lovackom ispitu.");
+        }
+        insert(new DetektovanaNepravilnost($korisnik.getId(), $eventZahtjevNovi.getId(), false));
 end
 
-rule "Gradjanin Pocinio Prekrsaj"
+rule "Gradjanin Pocinio Bar 5 Prekrsaja i Detektovana Nepravilnost"
     no-loop true
+    salience 1
     when
-        $z: Zahtjev($korisnik: korisnik, $domenPrimjene: domenPrimjene)
-        $gpp: Prekrsaj($jmbg: jmbg, $jmbg == $korisnik.getJmbg())
+        $z: Zahtjev($korisnik: korisnik, $domenPrimjene: domenPrimjene, $domenPrimjene != null)
+        Number($brojPrekrsaja: intValue >= 5) from accumulate (
+            $gpp: Prekrsaj($jmbg: jmbg, $jmbg == $korisnik.getJmbg(), this before[1s, 180d] $z),
+            count($gpp)
+        )
+        $dn: DetektovanaNepravilnost(zahtjevId == $z.getId(), obradjena == false)
     then
-        System.out.println("USAO U DETEKCIJU PREKRSAJA");
-        System.out.println($korisnik.getEmail() + " " + $domenPrimjene);
+        System.out.println("GRADJANINU SE ZABRANJUJE DALJE PODNOSENJE ZAHTJEVA");
+        modify($dn) {
+            setObradjena(true);
+        }
+        modify($z) {
+            setOdobren(false),
+            setNepravilnost("Gradjanin je pocinio " + $brojPrekrsaja + " prekrsaja i detektovana mu je nepravilnost.");
+        }
+        modify($korisnik) {
+            setPrestupnik(true);
+        }
+end
+
+rule "Gradjanin Pocinio Bar 5 Prekrsaja"
+    no-loop true
+    salience 0
+    when
+        $z: Zahtjev($korisnik: korisnik, $domenPrimjene: domenPrimjene, $domenPrimjene != null)
+        Number($brojPrekrsaja: intValue >= 5) from accumulate (
+            $gpp: Prekrsaj($jmbg: jmbg, $jmbg == $korisnik.getJmbg(), this before[1s, 180d] $z),
+            count($gpp)
+        )
+        not (
+            $dn: DetektovanaNepravilnost(zahtjevId == $z.getId())
+        )
+    then
+        System.out.println("GRADJANIN JE POCINIO " + $brojPrekrsaja + " PREKRSAJA");
+        modify($z) {
+            setOdobren(false),
+            setNepravilnost("Gradjanin je pocinio " + $brojPrekrsaja + " prekrsaja.");
+        }
 end

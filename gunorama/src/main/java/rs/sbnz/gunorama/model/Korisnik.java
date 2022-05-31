@@ -22,6 +22,9 @@ public class Korisnik extends BaseEntity {
     @Column(name = "jmbg", nullable = false)
     private String jmbg;
 
+    @Column(name = "prestupnik", nullable = false)
+    private boolean prestupnik = false;
+
     public Korisnik() {}
 
     public Korisnik(String email, String password, String jmbg) {
