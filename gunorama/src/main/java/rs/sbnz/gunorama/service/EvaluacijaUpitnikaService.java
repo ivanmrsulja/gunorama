@@ -8,6 +8,7 @@ import org.kie.api.runtime.rule.FactHandle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.sbnz.gunorama.dto.KorisnickiUpitnik;
+import rs.sbnz.gunorama.exception.NotFoundException;
 import rs.sbnz.gunorama.model.Kalibar;
 import rs.sbnz.gunorama.model.Oruzje;
 import rs.sbnz.gunorama.model.Zahtjev;
@@ -47,7 +48,7 @@ public class EvaluacijaUpitnikaService {
     public KonkretnaNamjenaFact evaluate(KorisnickiUpitnik korisnickiUpitnik) {
 
         Zahtjev zahtjev = this.zahtjevRepository.findById(korisnickiUpitnik.getZahtjevId())
-                .orElseThrow(() -> new RuntimeException(String.format("Zahtjev with id: %d not found.", korisnickiUpitnik.getZahtjevId())));
+                .orElseThrow(() -> new NotFoundException(String.format("Zahtjev sa id-ijem: %d nije pronadjen.", korisnickiUpitnik.getZahtjevId())));
 
         KonkretnaNamjenaFaza konkretnaNamjenaFaza = new KonkretnaNamjenaFaza(
                 zahtjev.getId(),

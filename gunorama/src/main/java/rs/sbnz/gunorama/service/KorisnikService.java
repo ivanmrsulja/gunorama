@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import rs.sbnz.gunorama.exception.NotFoundException;
 import rs.sbnz.gunorama.repository.KorisnikRepository;
 
 
@@ -23,6 +24,6 @@ public class KorisnikService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return this.korisnikRepository.findByEmail(username)
-                .orElseThrow(() -> new RuntimeException(String.format("Korisnik sa imenom: %s nije pronadjen.", username)));
+                .orElseThrow(() -> new NotFoundException(String.format("Korisnik sa imenom: %s nije pronadjen.", username)));
     }
 }
