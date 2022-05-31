@@ -10,4 +10,6 @@ public interface KorisnikRepository extends JpaRepository<Korisnik, Integer> {
 
     @Query("select k from Korisnik k where k.jmbg = :jmbg")
     Optional<Korisnik> findOneByJmbg(String jmbg);
+
+    Optional<Korisnik> findByEmail(String email);
 }

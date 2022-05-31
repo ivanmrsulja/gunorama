@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 public class GunoramaApplication {
@@ -37,5 +39,10 @@ public class GunoramaApplication {
 		KieSessionConfiguration ksconf1 = ks.newKieSessionConfiguration();
 		ksconf1.setOption(ClockTypeOption.get(ClockType.REALTIME_CLOCK.getId()));
 		return kbase.newKieSession(ksconf1, null);
+	}
+
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 }

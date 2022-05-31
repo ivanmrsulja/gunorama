@@ -3,6 +3,7 @@ package rs.sbnz.gunorama;
 import org.kie.api.runtime.KieSession;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import rs.sbnz.gunorama.model.*;
 import rs.sbnz.gunorama.model.enums.*;
@@ -26,25 +27,53 @@ public class DbInitializer implements ApplicationRunner {
 
     private final KorisnikRepository korisnikRepository;
 
+    private final DozvolaRepository dozvolaRepository;
+
+    private final AutoritetRepository autoritetRepository;
+
     private final KieSession kieSession;
+
+    private final PasswordEncoder passwordEncoder;
 
     public DbInitializer(KalibarRepository kalibarRepository,
                          OruzjeRepository oruzjeRepository,
                          PotrebanUslovRepository potrebanUslovRepository,
                          ZahtjevRepository zahtjevRepository,
                          KorisnikRepository korisnikRepository,
-                         KieSession kieSession) {
+                         DozvolaRepository dozvolaRepository,
+                         AutoritetRepository autoritetRepository,
+                         KieSession kieSession, PasswordEncoder passwordEncoder) {
         this.kalibarRepository = kalibarRepository;
         this.oruzjeRepository = oruzjeRepository;
         this.potrebanUslovRepository = potrebanUslovRepository;
         this.zahtjevRepository = zahtjevRepository;
         this.korisnikRepository = korisnikRepository;
+        this.dozvolaRepository = dozvolaRepository;
+        this.autoritetRepository = autoritetRepository;
         this.kieSession = kieSession;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
+
+        Dozvola unosenjeZahtjeva = new Dozvola("UNOSENJE_ZAHTJEVA");
+        Dozvola popunjavanjeUpitnika = new Dozvola("POPUNJAVANJE_UPITNIKA");
+        Dozvola dobavljanjeZahtjevaZaKorisnika = new Dozvola("DOBAVLJANJE_ZAHTJEVA_ZA_KORISNIKA");
+
+        this.dozvolaRepository.saveAll(Arrays.asList(unosenjeZahtjeva, popunjavanjeUpitnika, dobavljanjeZahtjevaZaKorisnika));
+
+        Autoritet policijskiSluzbenik = new Autoritet("POLICIJSKI_SLUZBENIK");
+        policijskiSluzbenik.dodajDozvolu(unosenjeZahtjeva);
+
+        Autoritet gradjanin = new Autoritet("GRADJANIN");
+        gradjanin.dodajDozvolu(popunjavanjeUpitnika).dodajDozvolu(dobavljanjeZahtjevaZaKorisnika);
+
+        this.autoritetRepository.saveAll(Arrays.asList(policijskiSluzbenik, gradjanin));
+
+
+
         Kalibar k1 = new Kalibar("9MM_PARABELLUM", new ArrayList<>(Arrays.asList(KonkretnaNamjena.POSJEDOVANJE, KonkretnaNamjena.NOSENJE)));
         Kalibar k2 = new Kalibar("12GA_BUCKSHOT", new ArrayList<>(Arrays.asList(KonkretnaNamjena.POSJEDOVANJE, KonkretnaNamjena.LOV_SITNE_DIVLJACI, KonkretnaNamjena.SKIT)));
         Kalibar k3 = new Kalibar(".308_WINCHESTER", new ArrayList<>(Arrays.asList(KonkretnaNamjena.LOV_KRUPNE_DIVLJACI)));
@@ -71,12 +100,14 @@ public class DbInitializer implements ApplicationRunner {
 
         potrebanUslovRepository.saveAll(Arrays.asList(pu1, pu2, pu3, pu4));
 
-        Korisnik korisnik1 = new Korisnik("email@email.com", "password", "1231231231231");
-        Korisnik korisnik2 = new Korisnik("email2@email.com", "password", "1111111111111");
-        Korisnik korisnik3 = new Korisnik("email3@email.com", "password", "2222222222222");
+        Korisnik policajac = new Korisnik("mrpoliceman@email.com", passwordEncoder.encode("narodniministar"), "1015454526786", policijskiSluzbenik);
+        Korisnik korisnik1 = new Korisnik("email@email.com", passwordEncoder.encode("password"), "1231231231231", gradjanin);
+        Korisnik korisnik2 = new Korisnik("email2@email.com", passwordEncoder.encode("password"), "1111111111111", gradjanin);
+        Korisnik korisnik3 = new Korisnik("email3@email.com", passwordEncoder.encode("password"), "2222222222222", gradjanin);
         korisnikRepository.save(korisnik1);
         korisnikRepository.save(korisnik2);
         korisnikRepository.save(korisnik3);
+        korisnikRepository.save(policajac);
 
         Zahtjev z1 = new Zahtjev();
         z1.setOdobren(true);
