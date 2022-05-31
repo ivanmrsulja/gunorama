@@ -10,7 +10,6 @@ import rs.sbnz.gunorama.dto.KalibarDTO;
 import rs.sbnz.gunorama.dto.KorisnickiUpitnik;
 import rs.sbnz.gunorama.dto.OruzjeDTO;
 import rs.sbnz.gunorama.dto.PreporucenoOruzjeDTO;
-import rs.sbnz.gunorama.model.facts.KonkretnaNamjenaFact;
 import rs.sbnz.gunorama.model.facts.PreporucenoOruzjeFact;
 import rs.sbnz.gunorama.service.EvaluacijaUpitnikaService;
 

@@ -4,6 +4,7 @@ import org.drools.core.ClockType;
 import org.kie.api.KieBase;
 import org.kie.api.KieBaseConfiguration;
 import org.kie.api.KieServices;
+import org.kie.api.conf.EqualityBehaviorOption;
 import org.kie.api.conf.EventProcessingOption;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
@@ -33,9 +34,8 @@ public class GunoramaApplication {
 				.newKieContainer(ks.newReleaseId("rs.sbnz", "gunorama-rules", "0.0.1-SNAPSHOT"));
 		KieBaseConfiguration kbconf = ks.newKieBaseConfiguration();
 		kbconf.setOption(EventProcessingOption.STREAM);
+		//kbconf.setOption(EqualityBehaviorOption.EQUALITY);
 		KieBase kbase = kContainer.newKieBase(kbconf);
-//		KieScanner kScanner = ks.newKieScanner(kContainer);
-//		kScanner.start(10_000);
 		KieSessionConfiguration ksconf1 = ks.newKieSessionConfiguration();
 		ksconf1.setOption(ClockTypeOption.get(ClockType.REALTIME_CLOCK.getId()));
 		return kbase.newKieSession(ksconf1, null);

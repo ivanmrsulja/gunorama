@@ -166,6 +166,120 @@
         </v-btn>
       </template>
     </v-snackbar>
+    <v-dialog
+      width="50%"
+      v-model="dialog"
+      hide-overlay
+      transition="dialog-bottom-transition"
+    >
+      <v-card>
+        <v-toolbar dark color="primary">
+          <v-toolbar-title> Predlozi </v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn icon dark @click="dialog = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-toolbar>
+
+        <v-container>
+          <v-row
+            v-if="preporuka.preporucenoOruzje.length === 0"
+            align="center"
+            justify="center"
+          >
+            <h4 class="subheader">NEMA PREDLOGA</h4>
+          </v-row>
+          <div v-else>
+            <v-row align="center" justify="center">
+              <v-col cols="12" md="6">
+                <v-flex class="text-center">
+                  <h4 class="subheader">
+                    Rezultati za konkretnu namjenu:
+                    {{
+                      preporuka.konkretnaNamjena | capitalize | removeUnderscore
+                    }}
+                  </h4>
+                </v-flex>
+              </v-col>
+            </v-row>
+            <v-row align="center" justify="center">
+              <v-simple-table>
+                <template v-slot:default>
+                  <thead>
+                    <tr>
+                      <th class="text-left">Naziv</th>
+                      <th class="text-left">Mehanizam hranjenja</th>
+                      <th class="text-left">Mehanizam okidanja</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="oruzje in preporuka.preporucenoOruzje"
+                      :key="oruzje.naziv"
+                    >
+                      <td>
+                        {{ oruzje.naziv }}
+                      </td>
+                      <td>
+                        {{
+                          oruzje.mehanizamHranjenja
+                            | capitalize
+                            | removeUnderscore
+                        }}
+                      </td>
+                      <td>
+                        {{
+                          oruzje.mehanizamOkidanja
+                            | capitalize
+                            | removeUnderscore
+                        }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
+            </v-row>
+            <v-row align="center" justify="center">
+              <v-col cols="12" md="6">
+                <v-flex class="text-center">
+                  <h4 class="subheader">
+                    Dozvoljeni kalibri za konkretnu namjenu:
+                    {{
+                      preporuka.konkretnaNamjena | capitalize | removeUnderscore
+                    }}
+                  </h4>
+                </v-flex>
+              </v-col>
+            </v-row>
+            <v-row align="center" justify="center">
+              <v-simple-table>
+                <template v-slot:default>
+                  <thead>
+                    <tr>
+                      <th class="text-left">Id</th>
+                      <th class="text-left">Naziv</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="kalibar in preporuka.dozvoljeniKalibri"
+                      :key="kalibar.id"
+                    >
+                      <td>
+                        {{ kalibar.id }}
+                      </td>
+                      <td>
+                        {{ kalibar.naziv }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
+            </v-row>
+          </div>
+        </v-container>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -179,11 +293,17 @@ export default {
   name: "CitizenQuestionnaire",
   data: () => {
     return {
+      dialog: false,
       btnLoading: false,
       snackbar: false,
       text: "Wrong username/password combination.",
       timeout: 5000,
       dostupniKalibri: [],
+      preporuka: {
+        preporucenoOruzje: [],
+        dozvoljeniKalibri: [],
+        konkretnaNamjena: null,
+      },
       dostupniMehanizmiHranjenja: [
         {
           text: "Obrtnočepni",
@@ -262,7 +382,9 @@ export default {
         .fileQuestionnaire(payload)
         .then((response) => {
           this.btnLoading = false;
-          console.log(response);
+          this.dialog = true;
+          this.preporuka = response.data;
+          // console.log(response.data);
         })
         .catch((error) => {
           this.btnLoading = false;
