@@ -11,6 +11,10 @@ local.properties
 .loadpath
 .recommenders
 
+!.mvn/wrapper/maven-wrapper.jar
+
+src/main/resources/rs/sbnz/rules/OdredjivanjeDozvoljenihKalibara.drl
+
 # External tool builders
 .externalToolBuilders/
 
