@@ -17,7 +17,7 @@ rule "Detektovana Nepravilnost - falsifikovan lovacki ispit"
                 odobren == false,
                 korisnik.getJmbg() == $korisnik.getJmbg(),
                 this before[1s, 15d] $eventZahtjevNovi,
-                !dokumenti.contains(TipDokumenta.DOKAZ_O_POLOZENOM_LOVACKOM_ISPITU)
+                !dokumenti.contains(TipDokumenta.DOKAZ_O_POLOZENOM_LOVACKOM_ISPITU) && dokumenti.size() > 0
             ),
             collectSet($eventZahtjevStari)
         )

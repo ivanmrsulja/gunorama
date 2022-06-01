@@ -45,6 +45,15 @@ const routes = [
       authorities: [roles.gradjanin],
     },
   },
+  {
+    path: "/upitnik-sluzbenika",
+    name: "PoliceOfficerQuestionnaireView",
+    component: () => import("../views/PoliceOfficerQuestionnaireView.vue"),
+    meta: {
+      authenticated: true,
+      authorities: [roles.policijskiSluzbenik],
+    },
+  },
 ];
 
 const router = new VueRouter({

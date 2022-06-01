@@ -12,6 +12,14 @@
       Pregled odobrenih zahtjeva
     </v-btn>
 
+    <v-btn
+      text
+      v-if="loggedIn === true && roles === 'POLICIJSKI_SLUZBENIK'"
+      @click="redirect('PoliceOfficerQuestionnaireView')"
+    >
+      Podnesi novi zahtjev
+    </v-btn>
+
     <v-btn v-if="!loggedIn" text @click="redirect('Login')"> Prijava </v-btn>
     <v-btn v-else text @click="logout"> Odjava </v-btn>
   </v-app-bar>
