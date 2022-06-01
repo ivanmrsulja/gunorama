@@ -9,7 +9,7 @@ public abstract class Faza {
 
     protected Integer zahtjevId;
 
-    public Faza() {}
+    protected Faza() {}
 
     protected Faza(Integer zahtjevId) {
         this.zahtjevId = zahtjevId;

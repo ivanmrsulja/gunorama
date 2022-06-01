@@ -2,7 +2,6 @@ package rs.sbnz.gunorama.service;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.maven.shared.invoker.MavenInvocationException;
 import org.drools.core.ClassObjectFilter;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.FactHandle;
@@ -11,16 +10,12 @@ import org.springframework.stereotype.Service;
 import rs.sbnz.gunorama.dto.KorisnickiUpitnik;
 import rs.sbnz.gunorama.model.Kalibar;
 import rs.sbnz.gunorama.model.Oruzje;
-import rs.sbnz.gunorama.model.enums.KonkretnaNamjena;
-import rs.sbnz.gunorama.model.facts.DozvoljeniKalibriFact;
 import rs.sbnz.gunorama.model.facts.PreporucenoOruzjeFact;
 import rs.sbnz.gunorama.model.faze.KonkretnaNamjenaFaza;
 import rs.sbnz.gunorama.model.faze.LicnePreferenceFaza;
-import rs.sbnz.gunorama.model.templates.OdredjivanjeDozvoljenihKalibaraTemplateModel;
 import rs.sbnz.gunorama.repository.KalibarRepository;
 import rs.sbnz.gunorama.repository.OruzjeRepository;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,14 +31,12 @@ public class EvaluacijaUpitnikaService {
 
     private final OruzjeRepository oruzjeRepository;
 
-    private final TemplateService templateService;
 
     @Autowired
-    public EvaluacijaUpitnikaService(KieSession kieSession, KalibarRepository kalibarRepository, OruzjeRepository oruzjeRepository, TemplateService templateService) {
+    public EvaluacijaUpitnikaService(KieSession kieSession, KalibarRepository kalibarRepository, OruzjeRepository oruzjeRepository) {
         this.kieSession = kieSession;
         this.kalibarRepository = kalibarRepository;
         this.oruzjeRepository = oruzjeRepository;
-        this.templateService = templateService;
     }
 
 
@@ -66,23 +59,13 @@ public class EvaluacijaUpitnikaService {
         kieSession.delete(konkretnaNamjenaFazaFactHandle);
 
 
-//        try {
-//            this.templateService.doJob();
-//            this.templateService.refresh();
-//        } catch (IOException | MavenInvocationException e) {
-//            e.printStackTrace();
-//        }
-
-
         List<Kalibar> sviKalibri = this.kalibarRepository.findAll();
         List<FactHandle> kalibriFactHandles = new ArrayList<>();
         for (Kalibar kalibar : sviKalibri)
             kalibriFactHandles.add(kieSession.insert(kalibar));
 
-
         kieSession.getAgenda().getAgendaGroup("Odredjivanje dozvoljenih kalibara").setFocus();
         kieSession.fireAllRules();
-
 
         //ovo ostaje
         List<Kalibar> zeljeniKalibri = this.kalibarRepository.findAllById(korisnickiUpitnik.getKalibri());
@@ -110,8 +93,8 @@ public class EvaluacijaUpitnikaService {
 
         List<FactHandle> toDelete = kieSession.getFactHandles().stream().filter(factHandle ->
                 factHandle.toExternalForm().contains("KonkretnaNamjenaFact") ||
-                factHandle.toExternalForm().contains("PreporucenoOruzjeFact") ||
-                factHandle.toExternalForm().contains("DozvoljeniKaliriFact")
+                        factHandle.toExternalForm().contains("PreporucenoOruzjeFact") ||
+                        factHandle.toExternalForm().contains("DozvoljeniKalibriFact")
         ).collect(Collectors.toList());
         toDelete.forEach(kieSession::delete);
 

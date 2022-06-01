@@ -33,7 +33,7 @@ public class EvaluacijaZahtjevaService {
 
     private final KorisnikRepository korisnikRepository;
 
-    private final Map<TipDokumenta, Integer> prioritetDokumenta = new HashMap<>(Map.of(
+    private final EnumMap<TipDokumenta, Integer> prioritetDokumenta = new EnumMap<>(Map.of(
             TipDokumenta.DOKAZ_O_CLANSTVU_U_LOVACKOM_DRUSTVU, 1,
             TipDokumenta.DOKAZ_O_POLOZENOM_LOVACKOM_ISPITU, 2,
             TipDokumenta.DOKAZ_O_CLANSTVU_U_LOVACKO_STRELJACKOM_DRUSTVU, 1,
