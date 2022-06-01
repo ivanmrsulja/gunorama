@@ -36,4 +36,8 @@ public class KorisnickiUpitnik {
 
     private List<Integer> kalibri; //id-ijevi zeljenih kalibara
 
+    private Double minimalniPrecnikUMilimetrima = 0.0;
+
+    private Double maksimalniPrecnikUMilimetrima = 15.0;
+
 }

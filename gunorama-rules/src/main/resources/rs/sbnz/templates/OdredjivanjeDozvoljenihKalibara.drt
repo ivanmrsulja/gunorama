@@ -1,0 +1,40 @@
+template header
+zeljenaKonkretnaNamjena
+minimalniPrecnikUMilimetrima
+maksimalniPrecnikUMilimetrima
+
+package rs.sbnz.templates;
+
+import rs.sbnz.gunorama.model.enums.*;
+import rs.sbnz.gunorama.model.*;
+import rs.sbnz.gunorama.model.facts.*;
+import rs.sbnz.gunorama.model.faze.*;
+import java.util.*;
+
+template "odredjivanje-dozvoljenih-kalibara"
+
+rule "Odredjivanje kalibara uspjesno_@{row.rowNumber}"
+  no-loop true
+  salience 1
+  when 
+    $z: Zahtjev($id: id)
+    $k: KonkretnaNamjenaFact(zahtjevId == $id, konkretnaNamjena == @{zeljenaKonkretnaNamjena})
+    $kalibri: Set() from accumulate (
+      $k: Kalibar( @{zeljenaKonkretnaNamjena} memberOf namjene, uMilimetrima >= @{minimalniPrecnikUMilimetrima}, uMilimetrima <= @{maksimalniPrecnikUMilimetrima});
+      collectSet($k)
+    )
+    then
+      System.out.println("USPJESNO ODREDIO DOZVOLJENE KALIBRE ZA KONKRETNU NAMJENU " + @{zeljenaKonkretnaNamjena});
+      insert(new DozvoljeniKalibriFact($id, $kalibri));
+end
+
+rule "Odredjivanje kalibara neuspjesno_@{row.rowNumber}"
+  no-loop true
+  salience -1
+  when 
+    $z: Zahtjev($id: id)
+    not (KonkretnaNamjenaFact(zahtjevId == $id, konkretnaNamjena == @{zeljenaKonkretnaNamjena}))
+    then
+      System.out.println("NISAM ODREDIO DOZVOLJENE KALIBRE ZA KONKRETNU NAMJENU " + @{zeljenaKonkretnaNamjena});
+      insert(new DozvoljeniKalibriFact($id, new HashSet<Kalibar>()));
+end

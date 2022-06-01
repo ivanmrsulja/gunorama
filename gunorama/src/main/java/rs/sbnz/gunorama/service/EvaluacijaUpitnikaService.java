@@ -12,14 +12,17 @@ import rs.sbnz.gunorama.exception.NotFoundException;
 import rs.sbnz.gunorama.model.Kalibar;
 import rs.sbnz.gunorama.model.Oruzje;
 import rs.sbnz.gunorama.model.Zahtjev;
+import rs.sbnz.gunorama.model.enums.KonkretnaNamjena;
 import rs.sbnz.gunorama.model.facts.DozvoljeniKalibriFact;
 import rs.sbnz.gunorama.model.facts.PreporucenoOruzjeFact;
 import rs.sbnz.gunorama.model.faze.KonkretnaNamjenaFaza;
 import rs.sbnz.gunorama.model.faze.LicnePreferenceFaza;
+import rs.sbnz.gunorama.model.templates.OdredjivanjeDozvoljenihKalibaraTemplateModel;
 import rs.sbnz.gunorama.repository.KalibarRepository;
 import rs.sbnz.gunorama.repository.OruzjeRepository;
 import rs.sbnz.gunorama.repository.ZahtjevRepository;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -30,7 +33,6 @@ import java.util.stream.Collectors;
 public class EvaluacijaUpitnikaService {
 
     private final KieSession kieSession;
-
 
     private final KalibarRepository kalibarRepository;
 
@@ -65,10 +67,15 @@ public class EvaluacijaUpitnikaService {
         //TODO: ovdje dodaj da se aktivira template pravilo, da se nadju dozvoljeni kalibri za datu namjenu i generise ovaj fact. Sad to radim rucno
         //TODO: za sad ostavi da su svi kalibri dozvoljeni
 
-        List<Kalibar> dozvoljeniKalibri = this.kalibarRepository.findAll();
+        List<OdredjivanjeDozvoljenihKalibaraTemplateModel> templateModels = new ArrayList<>();
+        for(KonkretnaNamjena konkretnaNamjena: KonkretnaNamjena.values()){
+            templateModels.add(new OdredjivanjeDozvoljenihKalibaraTemplateModel(konkretnaNamjena, korisnickiUpitnik.getMinimalniPrecnikUMilimetrima(), korisnickiUpitnik.getMaksimalniPrecnikUMilimetrima()));
+        }
 
-        DozvoljeniKalibriFact dozvoljeniKalibriFact = new DozvoljeniKalibriFact(korisnickiUpitnik.getZahtjevId());
-        dozvoljeniKalibri.forEach(dozvoljeniKalibriFact::dodajKalibar);
+//        List<Kalibar> dozvoljeniKalibri = this.kalibarRepository.findAll();
+//
+//        DozvoljeniKalibriFact dozvoljeniKalibriFact = new DozvoljeniKalibriFact(korisnickiUpitnik.getZahtjevId());
+//        dozvoljeniKalibri.forEach(dozvoljeniKalibriFact::dodajKalibar);
 
         //ovo ostaje
         List<Kalibar> zeljeniKalibri = this.kalibarRepository.findAllById(korisnickiUpitnik.getKalibri());
@@ -84,12 +91,12 @@ public class EvaluacijaUpitnikaService {
 
         LicnePreferenceFaza licnePreferenceFaza = new LicnePreferenceFaza(korisnickiUpitnik.getZahtjevId(), korisnickiUpitnik.getMehanizmiHranjenja(), korisnickiUpitnik.getMehanizmiOkidanja(), zeljeniKalibri);
         FactHandle licnePreferenceFactHandle = kieSession.insert(licnePreferenceFaza);
-        FactHandle dozvoljeniKalibriFactHandle = kieSession.insert(dozvoljeniKalibriFact);
+        //FactHandle dozvoljeniKalibriFactHandle = kieSession.insert(dozvoljeniKalibriFact);
         kieSession.getAgenda().getAgendaGroup("Preporuka oruzja").setFocus();
         kieSession.fireAllRules();
 
         kieSession.delete(licnePreferenceFactHandle);
-        kieSession.delete(dozvoljeniKalibriFactHandle);
+        //kieSession.delete(dozvoljeniKalibriFactHandle);
         oruzjaFactHandles.forEach(kieSession::delete);
 
 
@@ -99,7 +106,7 @@ public class EvaluacijaUpitnikaService {
 
         List<FactHandle> toDelete = kieSession.getFactHandles().stream().filter(factHandle ->
                 factHandle.toExternalForm().contains("KonkretnaNamjenaFact") ||
-                        factHandle.toExternalForm().contains("PreporucenoOruzjeFact")
+                factHandle.toExternalForm().contains("PreporucenoOruzjeFact")
         ).collect(Collectors.toList());
         toDelete.forEach(kieSession::delete);
 

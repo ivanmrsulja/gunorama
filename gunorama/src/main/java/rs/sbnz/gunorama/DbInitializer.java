@@ -74,13 +74,13 @@ public class DbInitializer implements ApplicationRunner {
 
 
 
-        Kalibar k1 = new Kalibar("9MM_PARABELLUM", new ArrayList<>(Arrays.asList(KonkretnaNamjena.POSJEDOVANJE, KonkretnaNamjena.NOSENJE)));
-        Kalibar k2 = new Kalibar("12GA_BUCKSHOT", new ArrayList<>(Arrays.asList(KonkretnaNamjena.POSJEDOVANJE, KonkretnaNamjena.LOV_SITNE_DIVLJACI, KonkretnaNamjena.SKIT)));
-        Kalibar k3 = new Kalibar(".308_WINCHESTER", new ArrayList<>(Arrays.asList(KonkretnaNamjena.LOV_KRUPNE_DIVLJACI)));
-        Kalibar k4 = new Kalibar("12GA_SLUG", new ArrayList<>(Arrays.asList(KonkretnaNamjena.LOV_KRUPNE_DIVLJACI)));
-        Kalibar k5 = new Kalibar(".22_LR", new ArrayList<>(Arrays.asList(KonkretnaNamjena.KRATKOMETNO_GADJANJE)));
-        Kalibar k6 = new Kalibar(".22 WMRF", new ArrayList<>(Arrays.asList(KonkretnaNamjena.DALEKOMETNO_GADJANJE)));
-        Kalibar k7 = new Kalibar("16GA_BUCKSHOT", new ArrayList<>(Arrays.asList(KonkretnaNamjena.POSJEDOVANJE, KonkretnaNamjena.LOV_SITNE_DIVLJACI, KonkretnaNamjena.TRAP)));
+        Kalibar k1 = new Kalibar("9MM_PARABELLUM", new ArrayList<>(Arrays.asList(KonkretnaNamjena.POSJEDOVANJE, KonkretnaNamjena.NOSENJE)), 9.0);
+        Kalibar k2 = new Kalibar("12GA_BUCKSHOT", new ArrayList<>(Arrays.asList(KonkretnaNamjena.POSJEDOVANJE, KonkretnaNamjena.LOV_SITNE_DIVLJACI, KonkretnaNamjena.SKIT)) ,8.382);
+        Kalibar k3 = new Kalibar(".308_WINCHESTER", new ArrayList<>(Arrays.asList(KonkretnaNamjena.LOV_KRUPNE_DIVLJACI)), 7.8);
+        Kalibar k4 = new Kalibar("12GA_SLUG", new ArrayList<>(Arrays.asList(KonkretnaNamjena.LOV_KRUPNE_DIVLJACI)), 20.0);
+        Kalibar k5 = new Kalibar(".22_LR", new ArrayList<>(Arrays.asList(KonkretnaNamjena.KRATKOMETNO_GADJANJE)), 5.6);
+        Kalibar k6 = new Kalibar(".22 WMRF", new ArrayList<>(Arrays.asList(KonkretnaNamjena.DALEKOMETNO_GADJANJE)), 5.7);
+        Kalibar k7 = new Kalibar("16GA_BUCKSHOT", new ArrayList<>(Arrays.asList(KonkretnaNamjena.POSJEDOVANJE, KonkretnaNamjena.LOV_SITNE_DIVLJACI, KonkretnaNamjena.TRAP)), 7.65);
 
         kalibarRepository.saveAll(Arrays.asList(k1, k2, k3, k4, k5, k6, k7));
 

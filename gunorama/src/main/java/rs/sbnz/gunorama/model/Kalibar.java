@@ -22,7 +22,18 @@ public class Kalibar extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private List<KonkretnaNamjena> namjene;
 
+
+
+    @Column(name = "u_milimetrima")
+    private Double uMilimetrima;
+
     public Kalibar() {
+    }
+
+    public Kalibar(String naziv, List<KonkretnaNamjena> namjene, Double uMilimetrima) {
+        this.naziv = naziv;
+        this.namjene = namjene;
+        this.uMilimetrima = uMilimetrima;
     }
 
     public Kalibar(String naziv, List<KonkretnaNamjena> namjene) {
