@@ -50,6 +50,7 @@ rule "Preporuka oruzja - uspjesna"
             mehanizamOkidanja memberOf $odabraniMehanizmiOkidanja);
             collectList($o)
         )
+        
     $dozvoljeniKalibriSet: Set() from accumulate(
        $k: Kalibar() from $dozvoljeniKalibri;
        collectSet($k)  
@@ -57,7 +58,7 @@ rule "Preporuka oruzja - uspjesna"
     not (PreporucenoOruzjeFact(zahtjevId == $id))
 
     then
-      System.out.println("UPAO U PRAVILO ZA PREPORUKU USPJESNO");
+      System.out.println("UPAO U PRAVILO ZA PREPORUKU USPJESNO ZA " + $konkretnaNamjena);
       System.out.println($filtriranaOruzja);
       insert(new PreporucenoOruzjeFact($id, $filtriranaOruzja, $dozvoljeniKalibriSet, $konkretnaNamjena));
 end 

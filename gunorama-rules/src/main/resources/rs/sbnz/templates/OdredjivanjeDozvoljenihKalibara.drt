@@ -1,7 +1,5 @@
 template header
 zeljenaKonkretnaNamjena
-minimalniPrecnikUMilimetrima
-maksimalniPrecnikUMilimetrima
 
 package rs.sbnz.templates;
 
@@ -14,27 +12,31 @@ import java.util.*;
 template "odredjivanje-dozvoljenih-kalibara"
 
 rule "Odredjivanje kalibara uspjesno_@{row.rowNumber}"
+  agenda-group "Odredjivanje dozvoljenih kalibara"
   no-loop true
   salience 1
   when 
     $z: Zahtjev($id: id)
-    $k: KonkretnaNamjenaFact(zahtjevId == $id, konkretnaNamjena == @{zeljenaKonkretnaNamjena})
+    $konkretnaNamjenaFact: KonkretnaNamjenaFact(zahtjevId == $id, konkretnaNamjena == KonkretnaNamjena.@{zeljenaKonkretnaNamjena})
     $kalibri: Set() from accumulate (
-      $k: Kalibar( @{zeljenaKonkretnaNamjena} memberOf namjene, uMilimetrima >= @{minimalniPrecnikUMilimetrima}, uMilimetrima <= @{maksimalniPrecnikUMilimetrima});
-      collectSet($k)
+      $kalibar: Kalibar( KonkretnaNamjena.@{zeljenaKonkretnaNamjena} memberOf namjene);
+      collectSet($kalibar)
     )
     then
-      System.out.println("USPJESNO ODREDIO DOZVOLJENE KALIBRE ZA KONKRETNU NAMJENU " + @{zeljenaKonkretnaNamjena});
+      System.out.println("DOZVOLJENI KALIBRI ZA " + KonkretnaNamjena.@{zeljenaKonkretnaNamjena} + " : " + $kalibri);
       insert(new DozvoljeniKalibriFact($id, $kalibri));
 end
 
 rule "Odredjivanje kalibara neuspjesno_@{row.rowNumber}"
+  agenda-group "Odredjivanje dozvoljenih kalibara"
   no-loop true
   salience -1
   when 
     $z: Zahtjev($id: id)
-    not (KonkretnaNamjenaFact(zahtjevId == $id, konkretnaNamjena == @{zeljenaKonkretnaNamjena}))
+    not (DozvoljeniKalibriFact(zahtjevId == $id))
     then
-      System.out.println("NISAM ODREDIO DOZVOLJENE KALIBRE ZA KONKRETNU NAMJENU " + @{zeljenaKonkretnaNamjena});
+      System.out.println("DOZVOLJENI KALIBRI ZA " + KonkretnaNamjena.@{zeljenaKonkretnaNamjena} + " JE PRAZNA LISTA.");
       insert(new DozvoljeniKalibriFact($id, new HashSet<Kalibar>()));
 end
+
+end template
