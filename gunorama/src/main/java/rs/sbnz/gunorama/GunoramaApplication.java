@@ -1,5 +1,6 @@
 package rs.sbnz.gunorama;
 
+import org.apache.maven.shared.invoker.MavenInvocationException;
 import org.drools.core.ClockType;
 import org.drools.core.marshalling.impl.ProtobufMessages;
 import org.kie.api.KieBase;
@@ -23,6 +24,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import rs.sbnz.gunorama.service.TemplateService;
 
+import java.io.IOException;
+
 @SpringBootApplication
 public class GunoramaApplication {
 
@@ -34,17 +37,22 @@ public class GunoramaApplication {
 
 	@Bean
 	public KieSession kieContainer() {
+		TemplateService templateService = new TemplateService();
+		try {
+			templateService.doJob();
+			templateService.refresh();
+
+		} catch (IOException | MavenInvocationException e) {
+			e.printStackTrace();
+		}
+
 		KieServices ks = KieServices.Factory.get();
 		KieContainer kContainer = ks
 				.newKieContainer(ks.newReleaseId("rs.sbnz", "gunorama-rules", "0.0.1-SNAPSHOT"));
 		KieBaseConfiguration kieBaseConfiguration = ks.newKieBaseConfiguration();
 		kieBaseConfiguration.setOption(EventProcessingOption.STREAM);
-		//kbconf.setOption(EqualityBehaviorOption.EQUALITY);
 		KieBase kieBase = kContainer.newKieBase(kieBaseConfiguration);
 
-//		String drl = TemplateService.compileOdredjivanjeKalibaraTemplate();
-//		KnowledgeBuilder knowledgeBuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
-//		knowledgeBuilder.add(ResourceFactory.newByteArrayResource(drl.getBytes()), ResourceType.DRL);
 
 
 

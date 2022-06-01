@@ -104,10 +104,8 @@ public class DbInitializer implements ApplicationRunner {
         Korisnik korisnik1 = new Korisnik("email@email.com", passwordEncoder.encode("password"), "1231231231231", gradjanin);
         Korisnik korisnik2 = new Korisnik("email2@email.com", passwordEncoder.encode("password"), "1111111111111", gradjanin);
         Korisnik korisnik3 = new Korisnik("email3@email.com", passwordEncoder.encode("password"), "2222222222222", gradjanin);
-        korisnikRepository.save(korisnik1);
-        korisnikRepository.save(korisnik2);
-        korisnikRepository.save(korisnik3);
-        korisnikRepository.save(policajac);
+
+        korisnikRepository.saveAll(Arrays.asList(korisnik1, korisnik2, korisnik3, policajac));
 
         Zahtjev z1 = new Zahtjev();
         z1.setOdobren(true);
@@ -143,14 +141,6 @@ public class DbInitializer implements ApplicationRunner {
         kieSession.insert(z2);
         kieSession.insert(z3);
         kieSession.insert(z4);
-//
-//
-//        kieSession.insert(o1);
-//        kieSession.insert(o2);
-//        kieSession.insert(o3);
-//        kieSession.insert(o4);
-//        kieSession.insert(o5);
-//        kieSession.insert(o6);
 
     }
 }

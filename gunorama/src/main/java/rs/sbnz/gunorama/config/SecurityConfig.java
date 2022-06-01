@@ -41,7 +41,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        // super.configure(auth);
         auth.userDetailsService(korisnikService).passwordEncoder(this.passwordEncoder);
     }
 
@@ -61,6 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.POST, "/api/korisnici/prijava").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/detekcija-nepravilnosti").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/zahtjev-za-dozvolu").hasAuthority(unosenjeZahtjeva)
                 .antMatchers(HttpMethod.GET, "/api/korisnici/{id}/odobreni-zahtjevi").hasAuthority(dobavljanjeZahtjevaZaKorisnika)
                 .antMatchers(HttpMethod.GET, "/api/korisnici/{korisnikId}/odobreni-zahtjevi/{zahtjevId}").hasAuthority(dobavljanjeZahtjevaZaKorisnika)
                 .antMatchers(HttpMethod.POST, "/api/korisnicki-upitnik").hasAuthority(popunjavanjeUpitnika)
