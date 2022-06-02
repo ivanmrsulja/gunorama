@@ -3,7 +3,7 @@
     <v-row align="center" justify="center">
       <v-col cols="4" md="4">
         <v-flex class="text-center">
-          <h1>Predaja zahtjeva za gradjanina</h1>
+          <h1>Predaja zahtjeva za građanina</h1>
         </v-flex>
       </v-col>
     </v-row>
@@ -18,7 +18,7 @@
                 <v-col cols="12" md="10">
                   <v-text-field
                     v-model="email"
-                    label="Email gradjanina"
+                    label="Email građanina"
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -26,7 +26,7 @@
                 <v-col cols="12" md="10">
                   <v-text-field
                     v-model="jmbg"
-                    label="JMBG gradjanina"
+                    label="JMBG građanina"
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -35,6 +35,8 @@
                   <v-text-field
                     v-model="dioptrija"
                     type="number"
+                    min="0"
+                    step="0.05"
                     label="Izmjerena dioptrija na sistematskom pregledu"
                   ></v-text-field>
                 </v-col>
@@ -43,7 +45,7 @@
                 <v-col cols="12" md="10">
                   <v-checkbox
                     v-model="prosaoPsiholoskuEvaluaciju"
-                    label="Gradjanin prosao psiholosku evaluaciju"
+                    label="Građanin prošao psihološku evaluaciju"
                   ></v-checkbox>
                 </v-col>
               </v-row>
@@ -51,7 +53,7 @@
                 <v-col cols="12" md="10">
                   <v-checkbox
                     v-model="prosaoPsihijatrijskuEvaluaciju"
-                    label="Gradjanin prosao psihijaterijsku evaluaciju"
+                    label="Građanin prošao psihijatrijsku evaluaciju"
                   ></v-checkbox>
                 </v-col>
               </v-row>
@@ -139,7 +141,7 @@ export default {
           value: "DOKAZ_O_CLANSTVU_U_LOVACKO_STRELJACKOM_DRUSTVU",
         },
         {
-          text: "Dokaz o ugroženosti lične bezbijednosti",
+          text: "Dokaz o ugroženosti lične bezbjednosti",
           value: "DOKAZ_O_UGROZENOSTI_LICNE_BEZBIJEDNOSTI",
         },
         {

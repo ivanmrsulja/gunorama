@@ -65,7 +65,6 @@
               </v-row>
             </div>
 
-            <!--TODO: dodaj neki v-show, na osnovu domena primjene iz zahtjeva prikazuj i skrivaj ove div-ove -->
             <v-row align="center" justify="center">
               <v-col>
                 <h3 class="subheader">Domeni primjene i konkretne namjene</h3>
@@ -195,8 +194,8 @@
               justify="center"
             >
               <h4 class="subheader">
-                NEMA PREDLOGA ZA KONKRETNU NAMJENU
-                {{ preporuka.konkretnaNamjena }}
+                Nema predloga za konkretnu namjenu
+                {{ preporuka.konkretnaNamjena | capitalize | removeUnderscore }}
               </h4>
             </v-row>
             <div v-else>

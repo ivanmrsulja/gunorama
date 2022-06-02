@@ -1,6 +1,16 @@
 <template>
   <v-app-bar app color="primary" dark>
-    <div class="d-flex align-center">GUNORAMA</div>
+    <div class="d-flex align-center home-icon" @click="redirect('Home')">
+      <v-img width="50" height="50" :src="require('../assets/mup-rs.png')" />
+
+      <span
+        class="shrink mt-1 hidden-sm-and-down app-name"
+        contain
+        min-width="100"
+      >
+        gunorama
+      </span>
+    </div>
 
     <v-spacer></v-spacer>
 
@@ -58,3 +68,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.home-icon {
+  cursor: pointer;
+}
+.app-name {
+  font-family: "Montserrat", sans-serif;
+}
+</style>
