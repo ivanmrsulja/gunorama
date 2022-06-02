@@ -4,11 +4,12 @@
       <v-img width="50" height="50" :src="require('../assets/mup-rs.png')" />
 
       <span
-        class="shrink mt-1 hidden-sm-and-down app-name"
+        class="mt-1 hidden-sm-and-down app-name"
         contain
-        min-width="100"
+        min-width="200"
+        style="margin-left: 20px; font-size: 32px"
       >
-        gunorama
+        GUNORAMA
       </span>
     </div>
 
@@ -16,6 +17,7 @@
 
     <v-btn
       text
+      style="font-size: 20px"
       v-if="loggedIn === true && roles === 'GRADJANIN'"
       @click="redirect('ApprovedRequestsView')"
     >
@@ -24,14 +26,22 @@
 
     <v-btn
       text
+      style="font-size: 20px"
       v-if="loggedIn === true && roles === 'POLICIJSKI_SLUZBENIK'"
       @click="redirect('PoliceOfficerQuestionnaireView')"
     >
       Podnesi novi zahtjev
     </v-btn>
 
-    <v-btn v-if="!loggedIn" text @click="redirect('Login')"> Prijava </v-btn>
-    <v-btn v-else text @click="logout"> Odjava </v-btn>
+    <v-btn
+      style="font-size: 20px"
+      v-if="!loggedIn"
+      text
+      @click="redirect('Login')"
+    >
+      Prijava
+    </v-btn>
+    <v-btn style="font-size: 20px" v-else text @click="logout"> Odjava </v-btn>
   </v-app-bar>
 </template>
 

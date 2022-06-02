@@ -34,7 +34,7 @@ public class EvaluacijaZahtjevaService {
     private final ZahtjevRepository zahtjevRepository;
 
     private final KorisnikRepository korisnikRepository;
-    
+
     private final EmailService emailService;
 
     private final PasswordEncoder passwordEncoder;
