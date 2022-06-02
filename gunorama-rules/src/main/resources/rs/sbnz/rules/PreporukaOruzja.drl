@@ -58,8 +58,7 @@ rule "Preporuka oruzja - uspjesna"
     not (PreporucenoOruzjeFact(zahtjevId == $id))
 
     then
-      System.out.println("UPAO U PRAVILO ZA PREPORUKU USPJESNO ZA " + $konkretnaNamjena);
-      System.out.println($filtriranaOruzja);
+      System.out.println("UPAO U PRAVILO ZA PREPORUKU USPJESNO ZA " + $konkretnaNamjena + ". PREPORUCENO: " + $filtriranaOruzja);
       insert(new PreporucenoOruzjeFact($id, $filtriranaOruzja, $dozvoljeniKalibriSet, $konkretnaNamjena));
 end 
 

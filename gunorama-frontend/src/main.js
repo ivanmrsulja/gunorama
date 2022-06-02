@@ -9,11 +9,13 @@ import jwt_decode from "jwt-decode";
 Vue.config.productionTip = false;
 
 Vue.filter("capitalize", function (param) {
-  return param.charAt(0).toUpperCase() + param.slice(1).toLowerCase();
+  if (!param) return "N/A";
+  else return param.charAt(0).toUpperCase() + param.slice(1).toLowerCase();
 });
 
 Vue.filter("removeUnderscore", (param) => {
-  return param.replaceAll("_", " ");
+  if (!param) return "N/A";
+  else return param.replaceAll("_", " ");
 });
 // Configure axios to always include JWT when sending a request
 axios.interceptors.request.use(

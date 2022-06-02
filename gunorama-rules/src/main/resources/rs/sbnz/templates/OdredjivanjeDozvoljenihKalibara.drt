@@ -33,6 +33,7 @@ rule "Odredjivanje kalibara neuspjesno_@{row.rowNumber}"
   salience -1
   when 
     $z: Zahtjev($id: id)
+    $konkretnaNamjenaFact: KonkretnaNamjenaFact(zahtjevId == $id, konkretnaNamjena == KonkretnaNamjena.@{zeljenaKonkretnaNamjena})
     not (DozvoljeniKalibriFact(zahtjevId == $id))
     then
       System.out.println("DOZVOLJENI KALIBRI ZA " + KonkretnaNamjena.@{zeljenaKonkretnaNamjena} + " JE PRAZNA LISTA.");

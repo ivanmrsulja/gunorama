@@ -147,6 +147,12 @@
                   color="primary"
                   type="submit"
                   :loading="btnLoading"
+                  :disabled="
+                    skitTrap === '-1' &&
+                    nosenjePosjedovanje === '-1' &&
+                    tezinaDivljaci === null &&
+                    daljinaMete === null
+                  "
                 >
                   Potvrdi
                 </v-btn>
@@ -182,63 +188,70 @@
         </v-toolbar>
 
         <v-container>
-          <v-row
-            v-if="preporuka.preporucenoOruzje.length === 0"
-            align="center"
-            justify="center"
-          >
-            <h4 class="subheader">NEMA PREDLOGA</h4>
-          </v-row>
-          <div v-else>
-            <v-row align="center" justify="center">
-              <v-col cols="12" md="6">
-                <v-flex class="text-center">
-                  <h4 class="subheader">
-                    Rezultati za konkretnu namjenu:
-                    {{
-                      preporuka.konkretnaNamjena | capitalize | removeUnderscore
-                    }}
-                  </h4>
-                </v-flex>
-              </v-col>
+          <div>
+            <v-row
+              v-if="preporuka.preporucenoOruzje.length === 0"
+              align="center"
+              justify="center"
+            >
+              <h4 class="subheader">
+                NEMA PREDLOGA ZA KONKRETNU NAMJENU
+                {{ preporuka.konkretnaNamjena }}
+              </h4>
             </v-row>
-            <v-row align="center" justify="center">
-              <v-simple-table>
-                <template v-slot:default>
-                  <thead>
-                    <tr>
-                      <th class="text-left">Naziv</th>
-                      <th class="text-left">Mehanizam hranjenja</th>
-                      <th class="text-left">Mehanizam okidanja</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="oruzje in preporuka.preporucenoOruzje"
-                      :key="oruzje.naziv"
-                    >
-                      <td>
-                        {{ oruzje.naziv }}
-                      </td>
-                      <td>
-                        {{
-                          oruzje.mehanizamHranjenja
-                            | capitalize
-                            | removeUnderscore
-                        }}
-                      </td>
-                      <td>
-                        {{
-                          oruzje.mehanizamOkidanja
-                            | capitalize
-                            | removeUnderscore
-                        }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </template>
-              </v-simple-table>
-            </v-row>
+            <div v-else>
+              <v-row align="center" justify="center">
+                <v-col cols="12" md="6">
+                  <v-flex class="text-center">
+                    <h4 class="subheader">
+                      Rezultati za konkretnu namjenu:
+                      {{
+                        preporuka.konkretnaNamjena
+                          | capitalize
+                          | removeUnderscore
+                      }}
+                    </h4>
+                  </v-flex>
+                </v-col>
+              </v-row>
+              <v-row align="center" justify="center">
+                <v-simple-table>
+                  <template v-slot:default>
+                    <thead>
+                      <tr>
+                        <th class="text-left">Naziv</th>
+                        <th class="text-left">Mehanizam hranjenja</th>
+                        <th class="text-left">Mehanizam okidanja</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="oruzje in preporuka.preporucenoOruzje"
+                        :key="oruzje.naziv"
+                      >
+                        <td>
+                          {{ oruzje.naziv }}
+                        </td>
+                        <td>
+                          {{
+                            oruzje.mehanizamHranjenja
+                              | capitalize
+                              | removeUnderscore
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            oruzje.mehanizamOkidanja
+                              | capitalize
+                              | removeUnderscore
+                          }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </template>
+                </v-simple-table>
+              </v-row>
+            </div>
             <v-row align="center" justify="center">
               <v-col cols="12" md="6">
                 <v-flex class="text-center">
