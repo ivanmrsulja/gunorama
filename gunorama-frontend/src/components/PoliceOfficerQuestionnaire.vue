@@ -35,7 +35,8 @@
                   <v-text-field
                     v-model="dioptrija"
                     type="number"
-                    min="0"
+                    min="-30"
+                    max="30"
                     step="0.05"
                     label="Izmjerena dioptrija na sistematskom pregledu"
                   ></v-text-field>
@@ -177,7 +178,7 @@ export default {
         return;
       }
 
-      if (!this.dioptrija) {
+      if (this.dioptrija === undefined) {
         this.text = "Morate unijeti dioptriju.";
         this.snackbar = true;
         return;
@@ -207,7 +208,12 @@ export default {
           this.btnLoading = false;
         })
         .catch((error) => {
-          this.text = error.response.data.message;
+          if (error.response.data.message.includes("SQL")) {
+            this.text =
+              "Već postoji korisnik sa drugačijim JMBG-om koji koristi isti email.";
+          } else {
+            this.text = error.response.data.message;
+          }
           this.snackbar = true;
           this.btnLoading = false;
         });

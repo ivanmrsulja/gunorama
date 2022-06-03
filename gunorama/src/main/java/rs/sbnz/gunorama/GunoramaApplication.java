@@ -2,19 +2,14 @@ package rs.sbnz.gunorama;
 
 import org.apache.maven.shared.invoker.MavenInvocationException;
 import org.drools.core.ClockType;
-import org.drools.core.marshalling.impl.ProtobufMessages;
 import org.kie.api.KieBase;
 import org.kie.api.KieBaseConfiguration;
 import org.kie.api.KieServices;
 import org.kie.api.conf.EventProcessingOption;
-import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.KieSessionConfiguration;
 import org.kie.api.runtime.conf.ClockTypeOption;
-import org.kie.internal.builder.KnowledgeBuilder;
-import org.kie.internal.builder.KnowledgeBuilderFactory;
-import org.kie.internal.io.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -52,9 +47,6 @@ public class GunoramaApplication {
 		KieBaseConfiguration kieBaseConfiguration = ks.newKieBaseConfiguration();
 		kieBaseConfiguration.setOption(EventProcessingOption.STREAM);
 		KieBase kieBase = kContainer.newKieBase(kieBaseConfiguration);
-
-
-
 
 		KieSessionConfiguration kieSessionConfiguration = ks.newKieSessionConfiguration();
 		kieSessionConfiguration.setOption(ClockTypeOption.get(ClockType.REALTIME_CLOCK.getId()));

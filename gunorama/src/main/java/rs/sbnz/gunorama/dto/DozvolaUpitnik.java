@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import rs.sbnz.gunorama.model.enums.TipDokumenta;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -14,8 +17,10 @@ import java.util.List;
 @AllArgsConstructor
 public class DozvolaUpitnik {
 
+    @NotBlank
     private String jmbgKorisnika;
 
+    @Email
     private String emailKorisnika;
 
     private Double dioptrija;
@@ -24,5 +29,6 @@ public class DozvolaUpitnik {
 
     private boolean prosaoPsihijatrijskuEvaluaciju;
 
+    @NotNull
     private List<TipDokumenta> dokumenta;
 }

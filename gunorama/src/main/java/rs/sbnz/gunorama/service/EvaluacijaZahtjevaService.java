@@ -125,9 +125,9 @@ public class EvaluacijaZahtjevaService {
 
         String emailText;
         if(zahtjev.isOdobren()) {
-            emailText = "Vas zahtjev je odobren. Vasi kredencijali za logovanje: email=" + zahtjev.getKorisnik().getEmail() + " password=" + password;
+            emailText = "Vaš zahtjev je odobren. Vaši kredencijali za logovanje: email=" + zahtjev.getKorisnik().getEmail() + " lozinka=" + password;
         } else {
-            emailText = "Vas zahtjev je odbijen. Razlog: " + (zahtjev.getRazlogOdbijanja() == null ? zahtjev.getNepravilnost() : zahtjev.getRazlogOdbijanja());
+            emailText = "Vaš zahtjev je odbijen. Razlog: " + (zahtjev.getRazlogOdbijanja() == null ? zahtjev.getNepravilnost() : zahtjev.getRazlogOdbijanja());
         }
 
         emailService.sendSimpleMessage(zahtjev.getKorisnik().getEmail(), "Odgovor na zahtjev za izdavanje dozvole", emailText);

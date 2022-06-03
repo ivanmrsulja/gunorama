@@ -12,6 +12,8 @@ import rs.sbnz.gunorama.dto.ZahtjevDTO;
 import rs.sbnz.gunorama.model.Zahtjev;
 import rs.sbnz.gunorama.service.EvaluacijaZahtjevaService;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(value = "/api/zahtjev-za-dozvolu")
 public class EvaluacijaZahtjevaController {
@@ -24,7 +26,7 @@ public class EvaluacijaZahtjevaController {
     }
 
     @PostMapping
-    public ZahtjevDTO evaluateQuestionnaire(@RequestBody DozvolaUpitnik questionnaire) {
+    public ZahtjevDTO evaluateQuestionnaire(@RequestBody @Valid DozvolaUpitnik questionnaire) {
         Zahtjev zahtjev = evaluacijaZahtjevaService.evaluateQuestionnaire(questionnaire);
         return new ZahtjevDTO(new KorisnikDTO(zahtjev.getKorisnik().getEmail(), zahtjev.getKorisnik().getJmbg(), zahtjev.getKorisnik().isPrestupnik()), zahtjev.isOdobren(), zahtjev.getRazlogOdbijanja(), zahtjev.getDomenPrimjene(), zahtjev.getKonkretnaNamjena(), zahtjev.getNepravilnost(), zahtjev.getDokumenti());
     }
