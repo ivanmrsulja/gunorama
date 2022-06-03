@@ -21,7 +21,7 @@ export default {
     document.body.addEventListener("click", function () {
       if (!authService.userLoggedIn()) {
         let sample = document.getElementById("foobar");
-        sample.play();
+        if (sample) sample.play();
       }
     });
   },

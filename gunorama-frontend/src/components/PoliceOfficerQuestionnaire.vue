@@ -35,7 +35,6 @@
                   <v-text-field
                     v-model="dioptrija"
                     type="number"
-                    min="0"
                     step="0.05"
                     label="Izmjerena dioptrija na sistematskom pregledu"
                   ></v-text-field>
