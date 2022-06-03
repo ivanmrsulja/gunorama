@@ -49,7 +49,7 @@ export default {
 
   /* Full height */
   height: 100%;
-  width: 107%;
+  width: 155%;
 
   /* Center and scale the image nicely */
   background-position: center;

@@ -84,7 +84,6 @@ public class EvaluacijaZahtjevaService {
         } else {
             k = optionalKorisnik.get();
             k.setEmail(questionnaire.getEmailKorisnika());
-            k.setPassword(passwordEncoder.encode(password));
         }
         korisnikRepository.save(k);
 
@@ -126,6 +125,7 @@ public class EvaluacijaZahtjevaService {
         String emailText;
         if(zahtjev.isOdobren()) {
             emailText = "Vaš zahtjev je odobren. Vaši kredencijali za logovanje: email=" + zahtjev.getKorisnik().getEmail() + " lozinka=" + password;
+            k.setPassword(passwordEncoder.encode(password));
         } else {
             emailText = "Vaš zahtjev je odbijen. Razlog: " + (zahtjev.getRazlogOdbijanja() == null ? zahtjev.getNepravilnost() : zahtjev.getRazlogOdbijanja());
         }
