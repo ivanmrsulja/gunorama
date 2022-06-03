@@ -83,7 +83,6 @@ public class EvaluacijaZahtjevaService {
             k = new Korisnik(questionnaire.getEmailKorisnika(), passwordEncoder.encode(password), questionnaire.getJmbgKorisnika(), autoritetRepository.findAutoritetByName("GRADJANIN"));
         } else {
             k = optionalKorisnik.get();
-            k.setEmail(questionnaire.getEmailKorisnika());
         }
         korisnikRepository.save(k);
 
@@ -125,6 +124,7 @@ public class EvaluacijaZahtjevaService {
         String emailText;
         if(zahtjev.isOdobren()) {
             emailText = "Vaš zahtjev je odobren. Vaši kredencijali za logovanje: email=" + zahtjev.getKorisnik().getEmail() + " lozinka=" + password;
+            k.setEmail(questionnaire.getEmailKorisnika());
             k.setPassword(passwordEncoder.encode(password));
         } else {
             emailText = "Vaš zahtjev je odbijen. Razlog: " + (zahtjev.getRazlogOdbijanja() == null ? zahtjev.getNepravilnost() : zahtjev.getRazlogOdbijanja());
