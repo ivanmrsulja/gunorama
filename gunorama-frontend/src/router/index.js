@@ -27,7 +27,6 @@ const routes = [
     },
   },
   {
-    //TODO: dodati id zahtjeva za koji se popunjava upitnik
     path: "/:id_zahtjeva/upitnik-gradjanina",
     name: "CitizenQuestionnaireView",
     component: () => import("../views/CitizenQuestionnaireView.vue"),
