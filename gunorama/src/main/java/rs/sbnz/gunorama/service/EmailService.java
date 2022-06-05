@@ -24,7 +24,7 @@ public class EmailService {
         message.setSubject(subject);
         message.setText(text);
         message.setReplyTo("razminiravanje@hotmail.com");
-        log.info(to + " : " +text);
+        log.info(to + " : " + text);
         mailSender.send(message);
     }
 }
