@@ -63,6 +63,29 @@
                   />
                 </v-col>
               </v-row>
+
+              <v-row align="center" justify="center">
+                <v-col cols="10" md="5">
+                  <v-text-field
+                    type="number"
+                    min="0"
+                    max="20"
+                    step="0.1"
+                    v-model="minimalniKalibar"
+                    label="Minimalni prečnik kalibra u mm"
+                  />
+                </v-col>
+                <v-col cols="10" md="5">
+                  <v-text-field
+                    type="number"
+                    min="0"
+                    max="20"
+                    step="0.1"
+                    v-model="maksimalniKalibar"
+                    label="Maksimalni prečnik kalibra u mm"
+                  />
+                </v-col>
+              </v-row>
             </div>
 
             <v-row align="center" justify="center">
@@ -251,42 +274,57 @@
                 </v-simple-table>
               </v-row>
             </div>
-            <v-row align="center" justify="center">
+            <div v-if="preporuka.dozvoljeniKalibri.length > 0">
+              <v-row align="center" justify="center">
+                <v-col cols="12" md="6">
+                  <v-flex class="text-center">
+                    <h4 class="subheader">
+                      Dozvoljeni kalibri za konkretnu namjenu:
+                      {{
+                        preporuka.konkretnaNamjena
+                          | capitalize
+                          | removeUnderscore
+                      }}
+                    </h4>
+                  </v-flex>
+                </v-col>
+              </v-row>
+              <v-row align="center" justify="center">
+                <v-simple-table>
+                  <template v-slot:default>
+                    <thead>
+                      <tr>
+                        <th class="text-left">Id</th>
+                        <th class="text-left">Naziv</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="kalibar in preporuka.dozvoljeniKalibri"
+                        :key="kalibar.id"
+                      >
+                        <td>
+                          {{ kalibar.id }}
+                        </td>
+                        <td>
+                          {{ kalibar.naziv }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </template>
+                </v-simple-table>
+              </v-row>
+            </div>
+
+            <v-row align="center" justify="center" v-else>
               <v-col cols="12" md="6">
                 <v-flex class="text-center">
                   <h4 class="subheader">
-                    Dozvoljeni kalibri za konkretnu namjenu:
-                    {{
-                      preporuka.konkretnaNamjena | capitalize | removeUnderscore
-                    }}
+                    Ne postoje dozvoljeni kalibri koji zadovoljavaju navedene
+                    kriterijume.
                   </h4>
                 </v-flex>
               </v-col>
-            </v-row>
-            <v-row align="center" justify="center">
-              <v-simple-table>
-                <template v-slot:default>
-                  <thead>
-                    <tr>
-                      <th class="text-left">Id</th>
-                      <th class="text-left">Naziv</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="kalibar in preporuka.dozvoljeniKalibri"
-                      :key="kalibar.id"
-                    >
-                      <td>
-                        {{ kalibar.id }}
-                      </td>
-                      <td>
-                        {{ kalibar.naziv }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </template>
-              </v-simple-table>
             </v-row>
           </div>
         </v-container>
@@ -352,6 +390,8 @@ export default {
       mehanizmiOkidanja: [],
       kalibri: [],
       zahtjev: {},
+      minimalniKalibar: 0.0,
+      maksimalniKalibar: 20.0,
     };
   },
   mounted() {
@@ -388,7 +428,8 @@ export default {
       payload["mehanizmiOkidanja"] = this.mehanizmiOkidanja;
       payload["mehanizmiHranjenja"] = this.mehanizmiHranjenja;
       payload["kalibri"] = this.kalibri;
-
+      payload["minimalniPrecnikUMilimetrima"] = this.minimalniKalibar;
+      payload["maksimalniPrecnikUMilimetrima"] = this.maksimalniKalibar;
       //console.log(payload);
       questionnaireService
         .fileQuestionnaire(payload)

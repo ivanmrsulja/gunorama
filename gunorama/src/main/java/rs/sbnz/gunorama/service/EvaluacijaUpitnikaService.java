@@ -3,20 +3,26 @@ package rs.sbnz.gunorama.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.drools.core.ClassObjectFilter;
+import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.FactHandle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.sbnz.gunorama.dto.KorisnickiUpitnik;
+import rs.sbnz.gunorama.dto.KorisnickiUpitnikDTO;
+import rs.sbnz.gunorama.exception.NotFoundException;
 import rs.sbnz.gunorama.model.Kalibar;
 import rs.sbnz.gunorama.model.Oruzje;
+import rs.sbnz.gunorama.model.Zahtjev;
 import rs.sbnz.gunorama.model.facts.PreporucenoOruzjeFact;
 import rs.sbnz.gunorama.model.faze.KonkretnaNamjenaFaza;
 import rs.sbnz.gunorama.model.faze.LicnePreferenceFaza;
 import rs.sbnz.gunorama.repository.KalibarRepository;
 import rs.sbnz.gunorama.repository.OruzjeRepository;
+import org.kie.internal.utils.KieHelper;
+import rs.sbnz.gunorama.repository.ZahtjevRepository;
+import rs.sbnz.gunorama.util.RuleContainer;
 
-import java.util.ArrayList;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,22 +31,45 @@ import java.util.stream.Collectors;
 @Slf4j
 public class EvaluacijaUpitnikaService {
 
-    private final KieSession kieSession;
+    private final RuleService ruleService;
 
     private final KalibarRepository kalibarRepository;
 
     private final OruzjeRepository oruzjeRepository;
 
+    private final ZahtjevRepository zahtjevRepository;
+
+    private final RuleContainer ruleContainer;
+
 
     @Autowired
-    public EvaluacijaUpitnikaService(KieSession kieSession, KalibarRepository kalibarRepository, OruzjeRepository oruzjeRepository) {
-        this.kieSession = kieSession;
+    public EvaluacijaUpitnikaService(RuleService ruleService, KalibarRepository kalibarRepository, OruzjeRepository oruzjeRepository, ZahtjevRepository zahtjevRepository, RuleContainer ruleContainer) {
+        this.ruleService = ruleService;
         this.kalibarRepository = kalibarRepository;
         this.oruzjeRepository = oruzjeRepository;
+        this.zahtjevRepository = zahtjevRepository;
+        this.ruleContainer = ruleContainer;
     }
 
 
-    public PreporucenoOruzjeFact evaluate(KorisnickiUpitnik korisnickiUpitnik) {
+    public PreporucenoOruzjeFact evaluate(KorisnickiUpitnikDTO korisnickiUpitnik) {
+
+        List<String> rules = this.ruleContainer.getRules();
+        String templateRules = this.ruleService.compileOdredjivanjeKalibaraTemplate(korisnickiUpitnik.getMinimalniPrecnikUMilimetrima(), korisnickiUpitnik.getMaksimalniPrecnikUMilimetrima());
+
+        KieHelper kieHelper = new KieHelper();
+        for (String rule : rules)
+            kieHelper.addContent(rule, ResourceType.DRL);
+
+        kieHelper.addContent(templateRules, ResourceType.DRL);
+
+        KieSession kieSession = kieHelper.build().newKieSession();
+
+        Integer zahtjevId = korisnickiUpitnik.getZahtjevId();
+        Zahtjev zahtjev = this.zahtjevRepository.findById(zahtjevId)
+                .orElseThrow(() -> new NotFoundException(String.format("Zahtjev sa id-ijem: %d nije pronađen.", zahtjevId)));
+
+        kieSession.insert(zahtjev);
 
         KonkretnaNamjenaFaza konkretnaNamjenaFaza = new KonkretnaNamjenaFaza(
                 korisnickiUpitnik.getZahtjevId(),
@@ -58,11 +87,8 @@ public class EvaluacijaUpitnikaService {
         kieSession.fireAllRules();
         kieSession.delete(konkretnaNamjenaFazaFactHandle);
 
-
         List<Kalibar> sviKalibri = this.kalibarRepository.findAll();
-        List<FactHandle> kalibriFactHandles = new ArrayList<>();
-        for (Kalibar kalibar : sviKalibri)
-            kalibriFactHandles.add(kieSession.insert(kalibar));
+        sviKalibri.forEach(kieSession::insert);
 
         kieSession.getAgenda().getAgendaGroup("Odredjivanje dozvoljenih kalibara").setFocus();
         kieSession.fireAllRules();
@@ -70,12 +96,8 @@ public class EvaluacijaUpitnikaService {
         //ovo ostaje
         List<Kalibar> zeljeniKalibri = this.kalibarRepository.findAllById(korisnickiUpitnik.getKalibri());
 
-
         List<Oruzje> oruzja = this.oruzjeRepository.findAll();
-        List<FactHandle> oruzjaFactHandles = new ArrayList<>();
-        for (Oruzje oruzje : oruzja)
-            oruzjaFactHandles.add(kieSession.insert(oruzje));
-
+        oruzja.forEach(kieSession::insert);
 
         LicnePreferenceFaza licnePreferenceFaza = new LicnePreferenceFaza(korisnickiUpitnik.getZahtjevId(), korisnickiUpitnik.getMehanizmiHranjenja(), korisnickiUpitnik.getMehanizmiOkidanja(), zeljeniKalibri);
         FactHandle licnePreferenceFactHandle = kieSession.insert(licnePreferenceFaza);
@@ -83,20 +105,12 @@ public class EvaluacijaUpitnikaService {
         kieSession.fireAllRules();
 
         kieSession.delete(licnePreferenceFactHandle);
-        oruzjaFactHandles.forEach(kieSession::delete);
-        kalibriFactHandles.forEach(kieSession::delete);
-
 
         Collection<PreporucenoOruzjeFact> myFacts = (Collection<PreporucenoOruzjeFact>) kieSession.getObjects(new ClassObjectFilter(PreporucenoOruzjeFact.class));
 
         PreporucenoOruzjeFact preporucenoOruzjeFact = myFacts.stream().filter(fact -> fact.getZahtjevId().equals(korisnickiUpitnik.getZahtjevId())).collect(Collectors.toList()).get(0);
 
-        List<FactHandle> toDelete = kieSession.getFactHandles().stream().filter(factHandle ->
-                factHandle.toExternalForm().contains("KonkretnaNamjenaFact") ||
-                        factHandle.toExternalForm().contains("PreporucenoOruzjeFact") ||
-                        factHandle.toExternalForm().contains("DozvoljeniKalibriFact")
-        ).collect(Collectors.toList());
-        toDelete.forEach(kieSession::delete);
+        kieSession.dispose();
 
         return preporucenoOruzjeFact;
     }

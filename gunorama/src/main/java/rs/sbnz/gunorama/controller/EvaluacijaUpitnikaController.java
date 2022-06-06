@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import rs.sbnz.gunorama.dto.KalibarDTO;
-import rs.sbnz.gunorama.dto.KorisnickiUpitnik;
+import rs.sbnz.gunorama.dto.KorisnickiUpitnikDTO;
 import rs.sbnz.gunorama.dto.OruzjeDTO;
 import rs.sbnz.gunorama.dto.PreporucenoOruzjeDTO;
 import rs.sbnz.gunorama.model.facts.PreporucenoOruzjeFact;
@@ -29,7 +29,7 @@ public class EvaluacijaUpitnikaController {
 
 
     @PostMapping
-    public PreporucenoOruzjeDTO evaluateUserPoll(@RequestBody KorisnickiUpitnik korisnickiUpitnik) {
+    public PreporucenoOruzjeDTO evaluateUserPoll(@RequestBody KorisnickiUpitnikDTO korisnickiUpitnik) {
         PreporucenoOruzjeFact preporucenoOruzjeFact = this.evaluacijaUpitnikaService.evaluate(korisnickiUpitnik);
 
         PreporucenoOruzjeDTO preporucenoOruzjeDTO = new PreporucenoOruzjeDTO();

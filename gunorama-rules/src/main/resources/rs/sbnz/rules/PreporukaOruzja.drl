@@ -9,26 +9,13 @@ import rs.sbnz.gunorama.model.faze.*;
 import java.util.*;
 
 
-// rule "Preporuka oruzja - obrisi fact za zahtjev"
-//   agenda-group "Preporuka oruzja"
-//   no-loop true
-//   salience 1000
-//   when
-//     $zahtjev: Zahtjev($id: id) and
-//     $preporucenoOruzjeFact: PreporucenoOruzjeFact(zahtjevId == $id)
-//   then
-//     System.out.println("BRISEM FAZU I FACT CIJI JE ZAHTJEV ID: " + $id);
-//     delete(new PreporucenoOruzjeFact($id));
-// end
-
-
 rule "Preporuka oruzja - uspjesna"
   agenda-group "Preporuka oruzja"
 	no-loop true
   salience 1
   when
     $zahtjev: Zahtjev($id: id, $konkretnaNamjena: konkretnaNamjena, odobren == true) and
-    $dozvoljeniKalibriFact: DozvoljeniKalibriFact(zahtjevId == $id, $dozvoljeniKalibri: dozvoljeniKalibri) and
+    $dozvoljeniKalibriFact: DozvoljeniZeljeniKalibriFact(zahtjevId == $id, $dozvoljeniKalibri: dozvoljeniKalibri) and
     $licnePreferenceFaza: LicnePreferenceFaza(
       zahtjevId == $id,
       $odabraniMehanizmiHranjenja: mehanizmiHranjenja, 
@@ -69,7 +56,7 @@ rule "Preporuka oruzja - neuspjesna"
   salience -1
   when
     $zahtjev: Zahtjev($id: id, $konkretnaNamjena: konkretnaNamjena, odobren == true) and
-    $dozvoljeniKalibriFact: DozvoljeniKalibriFact(zahtjevId == $id, $dozvoljeniKalibri: dozvoljeniKalibri) and
+    $dozvoljeniKalibriFact: DozvoljeniZeljeniKalibriFact(zahtjevId == $id, $dozvoljeniKalibri: dozvoljeniKalibri) and
     $licnePreferenceFaza: LicnePreferenceFaza(
       zahtjevId == $id,
       $odabraniMehanizmiHranjenja: mehanizmiHranjenja, 

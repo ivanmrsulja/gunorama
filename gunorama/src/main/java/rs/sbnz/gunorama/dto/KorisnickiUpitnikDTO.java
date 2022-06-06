@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class KorisnickiUpitnik {
+public class KorisnickiUpitnikDTO {
 
     private Integer zahtjevId;
 
@@ -38,6 +38,6 @@ public class KorisnickiUpitnik {
 
     private Double minimalniPrecnikUMilimetrima = 0.0;
 
-    private Double maksimalniPrecnikUMilimetrima = 15.0;
+    private Double maksimalniPrecnikUMilimetrima = 20.0;
 
 }

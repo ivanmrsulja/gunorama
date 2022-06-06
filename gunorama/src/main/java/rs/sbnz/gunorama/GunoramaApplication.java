@@ -1,6 +1,5 @@
 package rs.sbnz.gunorama;
 
-import org.apache.maven.shared.invoker.MavenInvocationException;
 import org.drools.core.ClockType;
 import org.kie.api.KieBase;
 import org.kie.api.KieBaseConfiguration;
@@ -17,14 +16,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import rs.sbnz.gunorama.service.TemplateService;
-
-import java.io.IOException;
 
 @SpringBootApplication
 public class GunoramaApplication {
 
-	private static Logger log = LoggerFactory.getLogger(GunoramaApplication.class);
 
 	public static void main(String[] args) {
 		SpringApplication.run(GunoramaApplication.class, args);
@@ -32,15 +27,6 @@ public class GunoramaApplication {
 
 	@Bean
 	public KieSession kieContainer() {
-		TemplateService templateService = new TemplateService();
-		try {
-			templateService.doJob();
-			templateService.refresh();
-
-		} catch (IOException | MavenInvocationException e) {
-			e.printStackTrace();
-		}
-
 		KieServices ks = KieServices.Factory.get();
 		KieContainer kContainer = ks
 				.newKieContainer(ks.newReleaseId("rs.sbnz", "gunorama-rules", "0.0.1-SNAPSHOT"));

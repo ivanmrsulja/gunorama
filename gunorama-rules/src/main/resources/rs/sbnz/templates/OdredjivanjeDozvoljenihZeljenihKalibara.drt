@@ -1,5 +1,7 @@
 template header
 zeljenaKonkretnaNamjena
+minimalniPrecnikUMilimetrima
+maksimalniPrecnikUMilimetrima
 
 package rs.sbnz.templates;
 
@@ -9,7 +11,7 @@ import rs.sbnz.gunorama.model.facts.*;
 import rs.sbnz.gunorama.model.faze.*;
 import java.util.*;
 
-template "odredjivanje-dozvoljenih-kalibara"
+template "odredjivanje-dozvoljenih-zeljenih-kalibara"
 
 rule "Odredjivanje kalibara uspjesno_@{row.rowNumber}"
   agenda-group "Odredjivanje dozvoljenih kalibara"
@@ -19,12 +21,14 @@ rule "Odredjivanje kalibara uspjesno_@{row.rowNumber}"
     $z: Zahtjev($id: id)
     $konkretnaNamjenaFact: KonkretnaNamjenaFact(zahtjevId == $id, konkretnaNamjena == KonkretnaNamjena.@{zeljenaKonkretnaNamjena})
     $kalibri: Set() from accumulate (
-      $kalibar: Kalibar( KonkretnaNamjena.@{zeljenaKonkretnaNamjena} memberOf namjene);
+      $kalibar: Kalibar( KonkretnaNamjena.@{zeljenaKonkretnaNamjena} memberOf namjene, 
+                      uMilimetrima >= @{minimalniPrecnikUMilimetrima}, 
+                      uMilimetrima <= @{maksimalniPrecnikUMilimetrima});
       collectSet($kalibar)
     )
     then
-      System.out.println("DOZVOLJENI KALIBRI ZA " + KonkretnaNamjena.@{zeljenaKonkretnaNamjena} + " : " + $kalibri);
-      insert(new DozvoljeniKalibriFact($id, $kalibri));
+      System.out.println("DOZVOLJENI KALIBRI ZA " + KonkretnaNamjena.@{zeljenaKonkretnaNamjena} + " >= " + @{minimalniPrecnikUMilimetrima} + ", <= " + @{maksimalniPrecnikUMilimetrima}  + $kalibri);
+      insert(new DozvoljeniZeljeniKalibriFact($id, $kalibri));
 end
 
 rule "Odredjivanje kalibara neuspjesno_@{row.rowNumber}"
@@ -34,10 +38,10 @@ rule "Odredjivanje kalibara neuspjesno_@{row.rowNumber}"
   when 
     $z: Zahtjev($id: id)
     $konkretnaNamjenaFact: KonkretnaNamjenaFact(zahtjevId == $id, konkretnaNamjena == KonkretnaNamjena.@{zeljenaKonkretnaNamjena})
-    not (DozvoljeniKalibriFact(zahtjevId == $id))
+    not (DozvoljeniZeljeniKalibriFact(zahtjevId == $id))
     then
-      System.out.println("DOZVOLJENI KALIBRI ZA " + KonkretnaNamjena.@{zeljenaKonkretnaNamjena} + " JE PRAZNA LISTA.");
-      insert(new DozvoljeniKalibriFact($id, new HashSet<Kalibar>()));
+      System.out.println("DOZVOLJENI KALIBRI ZA " + KonkretnaNamjena.@{zeljenaKonkretnaNamjena} + " >= " + @{minimalniPrecnikUMilimetrima} + ", <= " + @{maksimalniPrecnikUMilimetrima}  + " JE PRAZNA LISTA.");
+      insert(new DozvoljeniZeljeniKalibriFact($id, new HashSet<Kalibar>()));
 end
 
 end template

@@ -9,22 +9,22 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class DozvoljeniKalibriFact extends Fact{
+public class DozvoljeniZeljeniKalibriFact extends Fact{
 
     Set<Kalibar> dozvoljeniKalibri;
 
-    public DozvoljeniKalibriFact(Integer zahtjevId, Set<Kalibar> dozvoljeniKalibri) {
+    public DozvoljeniZeljeniKalibriFact(Integer zahtjevId, Set<Kalibar> dozvoljeniKalibri) {
         super(zahtjevId);
         this.dozvoljeniKalibri = dozvoljeniKalibri;
     }
 
 
-    public DozvoljeniKalibriFact(Integer zahtjevId) {
+    public DozvoljeniZeljeniKalibriFact(Integer zahtjevId) {
         super(zahtjevId);
         this.dozvoljeniKalibri = new HashSet<>();
     }
 
-    public DozvoljeniKalibriFact dodajKalibar(Kalibar kalibar){
+    public DozvoljeniZeljeniKalibriFact dodajKalibar(Kalibar kalibar){
         this.dozvoljeniKalibri.add(kalibar);
         return this;
     }
